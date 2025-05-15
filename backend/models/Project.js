@@ -31,7 +31,7 @@ const Project = {
           console.error('Error al crear proyecto:', err);
           return callback(err, null);
         }
-        callback(null, { id: result.insertId, ...data });
+        callback(null, { id_proyecto: result.insertId, ...data });
       }
     );
   },

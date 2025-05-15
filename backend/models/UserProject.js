@@ -15,28 +15,41 @@ const UserProject = {
     });
   },
 
-  create: (data, callback) => {
-    const { id_usuario, id_proyecto, id_rol } = data;
+  getPermisos: (id_usuario, id_proyecto, callback) => {
     db.query(
-      'INSERT INTO Usuario_Proyecto (id_usuario, id_proyecto, id_rol) VALUES (?, ?, ?)',
-      [id_usuario, id_proyecto, id_rol],
-      (err, result) => {
+      'SELECT permisos FROM Usuario_Proyecto WHERE id_usuario = ? AND id_proyecto = ?',
+      [id_usuario, id_proyecto],
+      (err, results) => {
         if (err) return callback(err);
-        callback(null, { id_u_p: result.insertId, ...data });
+        callback(null, results[0]);
       }
     );
   },
 
-  update: (id, data, callback) => {
-    const { id_usuario, id_proyecto, id_rol } = data;
-    db.query(
-      'UPDATE Usuario_Proyecto SET id_usuario = ?, id_proyecto = ?, id_rol = ? WHERE id_u_p = ?',
-      [id_usuario, id_proyecto, id_rol, id],
-      (err) => {
-        if (err) return callback(err);
-        callback(null, { message: 'Asignación actualizada' });
-      }
-    );
+create: (data, callback) => {
+  const { id_usuario, id_proyecto } = data;
+  db.query(
+    'INSERT INTO Usuario_Proyecto (id_usuario, id_proyecto) VALUES (?, ?)',
+    [id_usuario, id_proyecto],
+    (err, result) => {
+      if (err) return callback(err);
+      callback(null, { id_u_p: result.insertId, ...data });
+    }
+  );
+},
+
+
+  getProyectosByUsuario: (id_usuario, callback) => {
+    const query = `
+      SELECT p.id_proyecto, p.nombre, p.descripcion, p.estado
+      FROM Proyecto p
+      JOIN Usuario_Proyecto up ON p.id_proyecto = up.id_proyecto
+      WHERE up.id_usuario = ?
+    `;
+    db.query(query, [id_usuario], (err, results) => {
+      if (err) return callback(err);
+      callback(null, results);
+    });
   },
 
   delete: (id, callback) => {
