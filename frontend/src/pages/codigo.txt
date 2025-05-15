@@ -1,0 +1,49 @@
+      <ul>
+        {users.map(user => (
+          <li key={user.id_usuario}>{user.nombre}</li>
+        ))}
+      </ul>
+
+
+interface User {
+  id_usuario: number;
+  nombre: string;
+}
+
+
+
+
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:3000/api/usuarios')
+      .then(response => {
+        setUsers(response.data);
+      })
+      .catch(error => {
+        console.error('Error al obtener usuarios:', error);
+      });
+  }, []);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
