@@ -2,6 +2,7 @@ import { useState } from "react";
 import './CSS/User.css';
 
 import { View } from '../types.tsx'; // o './types', según la ruta
+import React from "react";
 const UserView = ({ setView }: { setView: (view: View) => void }) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
