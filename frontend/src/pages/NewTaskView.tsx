@@ -7,57 +7,46 @@ interface Props {
   userId: number;
 }
 
-const NewProjectView: React.FC<Props> = ({ setView, userId }) => {
-  const [nombre, setNombre] = useState('');
+const NewTaskView: React.FC<Props> = ({ setView, userId }) => {
+  const [titulo, setTitulo] = useState('');
   const [descripcion, setDescripcion] = useState('');
-  const [estado, setEstado] = useState('Activo');
+  const [estado, setEstado] = useState<'pendiente' | 'en progreso' | 'completada'>('pendiente');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (!nombre.trim()) {
-      setError('El nombre es obligatorio');
+    if (!titulo.trim()) {
+      setError('El título es obligatorio');
       return;
     }
 
     try {
-      const proyectoRes = await axios.post('http://localhost:3000/api/proyectos', {
-        nombre,
+      await axios.post('http://localhost:3000/api/tareas', {
+        titulo,
         descripcion,
-        estado: 'Activo'
-      });
-
-    const nuevoProyecto = proyectoRes.data;
-    const id_proyecto = nuevoProyecto.id_proyecto;
-    
-    console.log("DEBUG POST /user-projects", {
-        id_usuario: userId,
-        id_proyecto: id_proyecto
-        });
-      await axios.post('http://localhost:3000/api/user-projects', {
-        id_usuario: userId,
-        id_proyecto
+        estado,
+        id_usuario: userId
       });
 
       setView('homepage');
     } catch (err) {
-      console.error('Error creando el proyecto:', err);
-      setError('Error al crear el proyecto');
+      console.error('Error creando la tarea:', err);
+      setError('Error al crear la tarea');
     }
   };
 
   return (
     <div className="p-6 max-w-xl mx-auto">
-      <h2 className="text-2xl font-semibold mb-4">Crear nuevo proyecto</h2>
+      <h2 className="text-2xl font-semibold mb-4">Crear nueva tarea</h2>
       {error && <p className="text-red-600 mb-2">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
-          placeholder="Nombre del proyecto"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
+          placeholder="Título de la tarea"
+          value={titulo}
+          onChange={(e) => setTitulo(e.target.value)}
           className="w-full p-2 border rounded"
         />
         <textarea
@@ -68,15 +57,16 @@ const NewProjectView: React.FC<Props> = ({ setView, userId }) => {
         />
         <select
           value={estado}
-          onChange={(e) => setEstado(e.target.value)}
+          onChange={(e) => setEstado(e.target.value as any)}
           className="w-full p-2 border rounded"
         >
-          <option value="Activo">Activo</option>
-          <option value="Inactivo">Inactivo</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="en progreso">En progreso</option>
+          <option value="completada">Completada</option>
         </select>
         <button
           type="submit"
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
           Crear
         </button>
@@ -92,4 +82,4 @@ const NewProjectView: React.FC<Props> = ({ setView, userId }) => {
   );
 };
 
-export default NewProjectView;
+export default NewTaskView;

@@ -3,7 +3,7 @@ import WelcomeView from './pages/WelcomeView.tsx';
 import LoginView from './pages/LoginView.tsx';
 import RegisterView from './pages/RegisterView.tsx';
 import Homepage from './pages/HomePageView.tsx';
-import NewProjectView from './pages/NewProjectView.tsx';
+import NewProjectView from './pages/NewTaskView.tsx';
 
 export type View = 'welcome' | 'login' | 'register' | 'homepage' | 'profile' | 'newProject';
 
