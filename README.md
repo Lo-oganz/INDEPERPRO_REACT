@@ -1,6 +1,9 @@
 # INDEPERPRO_REACT
 Changed technology from C# to React.
 
+ENLACE A GITHUB:
+https://github.com/Lo-oganz/INDEPERPRO_REACT.git
+
 Día 16:
 No se han terminado todas las views, pero faltan pocas cosas. El login de usuario y algunas partes del backend estan completas. Se pueden acceder a ver todos los datos al acceder al backend en el navegador.
 Sin embargo, los views se irán acabando estos días.
