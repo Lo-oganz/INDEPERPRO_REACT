@@ -2,23 +2,12 @@ const db = require('../config/db');
 
 const Tarea = {
   getAll: (callback) => {
-    const query = `
-      SELECT t.*, u.nombre AS nombre_usuario, p.nombre AS prioridad
-      FROM tarea t
-      JOIN usuario u ON t.id_usuario = u.id_usuario
-      JOIN prioridad p ON t.id_prioridad = p.id_prioridad
-    `;
+    const query = `SELECT * FROM tarea`;
     db.query(query, callback);
   },
 
-
   getById: (id, callback) => {
-    const query = `
-      SELECT t.*, u.nombre AS nombre_usuario
-      FROM tarea t
-      JOIN usuario u ON t.id_usuario = u.id_usuario
-      WHERE t.id_tarea = ?
-    `;
+    const query = `SELECT * FROM tarea WHERE id_tarea = ?`;
     db.query(query, [id], callback);
   },
 

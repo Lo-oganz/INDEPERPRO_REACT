@@ -21,8 +21,22 @@ interface Props {
 }
 
 const TaskCard: React.FC<Props> = ({ task, user }) => {
+  const getClassName = () => {
+    if (task.estado === 'completada') return 'task-card completada';
+    switch (task.prioridad.toLowerCase()) {
+      case 'alta':
+        return 'task-card alta';
+      case 'media':
+        return 'task-card media';
+      case 'baja':
+        return 'task-card baja';
+      default:
+        return 'task-card';
+    }
+  };
+
   return (
-    <div className="task-card">
+    <div className={getClassName()}>
       <h3>{task.titulo}</h3>
       <p>{task.descripcion}</p>
       <p><strong>Estado:</strong> {task.estado}</p>

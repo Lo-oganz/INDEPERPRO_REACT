@@ -1,18 +1,40 @@
 .task-card {
-  background-color: white;
   border-radius: 15px;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, 
-              rgba(0, 0, 0, 0.2) 0px 0px 0px;
-  padding: 1rem;
+  padding: 1rem 2rem;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 6px;
   margin-bottom: 1rem;
+  width: 100%;
+  transition: transform 0.2s ease-in-out;
 }
 
-.task-card p{
-    font-size: 15px;
-
+.task-card:hover {
+  transform: translateY(-3px);
 }
 
-.task-card strong{
-    font-size: 17px;
+.task-card h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
 
+.task-card p {
+  font-size: 15px;
+}
+
+.task-card strong {
+  font-size: 16px;
+}
+
+/* Colores por prioridad y estado */
+.task-card.alta {
+  background-color: #ffe5e5; /* rojo claro */
+}
+.task-card.media {
+  background-color: #fff8d9; /* amarillo claro */
+}
+.task-card.baja {
+  background-color: #e3f1ff; /* azul claro */
+}
+.task-card.completada {
+  background-color: #d2f8d2; /* verde claro */
 }
