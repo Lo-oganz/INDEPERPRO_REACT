@@ -23,7 +23,6 @@ const NewProjectView: React.FC<Props> = ({ setView, userId }) => {
     }
 
     try {
-      // 1. Crear el proyecto
       const proyectoRes = await axios.post('http://localhost:3000/api/proyectos', {
         nombre,
         descripcion,
@@ -33,7 +32,6 @@ const NewProjectView: React.FC<Props> = ({ setView, userId }) => {
     const nuevoProyecto = proyectoRes.data;
     const id_proyecto = nuevoProyecto.id_proyecto;
     
-      // 2. Asignar el usuario al proyecto
     console.log("DEBUG POST /user-projects", {
         id_usuario: userId,
         id_proyecto: id_proyecto
@@ -43,8 +41,7 @@ const NewProjectView: React.FC<Props> = ({ setView, userId }) => {
         id_proyecto
       });
 
-      // 3. Redirigir al dashboard
-      setView('dashboard');
+      setView('homepage');
     } catch (err) {
       console.error('Error creando el proyecto:', err);
       setError('Error al crear el proyecto');
@@ -85,7 +82,7 @@ const NewProjectView: React.FC<Props> = ({ setView, userId }) => {
         </button>
         <button
           type="button"
-          onClick={() => setView('dashboard')}
+          onClick={() => setView('homepage')}
           className="ml-2 text-gray-600 underline"
         >
           Cancelar

@@ -1,10 +1,9 @@
 const bcrypt = require('bcrypt');
-const User = require('../models/User');
+const User = require('../models/Usuario');
 
 exports.login = (req, res) => {
-  const { email, contrasenia } = req.body;
-
-  if (!email || !contrasenia) {
+  const { email, password } = req.body;
+  if (!email || !password) {
     return res.status(400).json({ error: 'Email y contraseña son obligatorios' });
   }
 
@@ -18,7 +17,7 @@ exports.login = (req, res) => {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    bcrypt.compare(contrasenia, user.contrasenia, (err, isMatch) => {
+    bcrypt.compare(password, user.password, (err, isMatch) => {
       if (err) {
         console.error('Error al comparar contraseñas:', err);
         return res.status(500).json({ error: 'Error al validar contraseña' });
@@ -28,7 +27,10 @@ exports.login = (req, res) => {
         return res.status(401).json({ error: 'Contraseña incorrecta' });
       }
 
-      res.json({ message: 'Inicio de sesión exitoso', usuario: { id: user.id_usuario, nombre: user.nombre, email: user.email } });
+      res.json({ 
+        message: 'Inicio de sesión exitoso', 
+        usuario: { id: user.id_usuario, nombre: user.nombre, email: user.email }
+      });
     });
   });
 };

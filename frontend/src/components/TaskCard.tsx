@@ -7,9 +7,7 @@ interface Task {
   descripcion: string;
   estado: string;
   prioridad: string;
-  fec_vencimiento: string;
   id_usuario: number;
-  id_proyecto: number;
 }
 
 interface User {
@@ -28,8 +26,7 @@ const TaskCard: React.FC<Props> = ({ task, user }) => {
       <h3>{task.titulo}</h3>
       <p>{task.descripcion}</p>
       <p><strong>Estado:</strong> {task.estado}</p>
-      <p><strong>Prioridad:</strong> {task.prioridad}</p>
-      <p><strong>Vencimiento:</strong> {new Date(task.fec_vencimiento).toLocaleDateString()}</p>
+      <p><strong>Prioridad:</strong> {task.prioridad || 'N/A'}</p>
       <p><strong>Asignado a:</strong> {user ? user.nombre : 'Desconocido'}</p>
     </div>
   );

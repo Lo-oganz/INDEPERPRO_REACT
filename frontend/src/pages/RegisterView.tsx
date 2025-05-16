@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';  // Importa axios
+import axios from 'axios';
 import './CSS/auth.css';
 import { View } from '../types';
-import TopbarAuth from '../components/TopbarAuth.tsx';  // IMPORTA EL COMPONENTE
+import TopbarAuth from '../components/TopbarAuth.tsx'; 
 import Footer from '../components/Footer.tsx';
 
 interface RegisterViewProps {
@@ -24,33 +24,34 @@ const RegisterView: React.FC<RegisterViewProps> = ({ setView }) => {
   };
 
   const handleRegister = () => {
-    if (contrasenia !== confirmarContrasenia) {
-      setError('Las contraseñas no coinciden.');
-      return;
-    }
+  if (contrasenia !== confirmarContrasenia) {
+    setError('Las contraseñas no coinciden.');
+    return;
+  }
 
-    if (!validarContrasenia(contrasenia)) {
-      setError('La contraseña debe tener mínimo 5 letras, 2 números y 1 símbolo.');
-      return;
-    }
+  if (!validarContrasenia(contrasenia)) {
+    setError('La contraseña debe tener mínimo 5 letras, 2 números y 1 símbolo.');
+    return;
+  }
 
-    const userData = { nombre, email, contrasenia };
+  const userData = { nombre, email, password: contrasenia, id_rol: 2 };
 
-    axios.post('http://localhost:3000/api/usuarios', userData)
-      .then(response => {
-        console.log('Registro exitoso:', response.data);
-        setError('');
-        setView('login');
-      })
-      .catch(error => {
-        console.error('Error al registrar el usuario:', error);
-        setError('Hubo un error al registrar el usuario.');
-      });
+  axios.post('http://localhost:3000/api/usuarios', userData)
+    .then(response => {
+      console.log('Registro exitoso:', response.data);
+      setError('');
+      setView('login');
+    })
+    .catch(error => {
+      console.error('Error al registrar el usuario:', error);
+      setError('Hubo un error al registrar el usuario.');
+    });
   };
+
 
   return (
     <div className='bg'>
-      <TopbarAuth setView={setView} />  {/* AQUI USAMOS EL COMPONENTE */}
+      <TopbarAuth setView={setView} />
 
       <div className="auth-content">
         <div className="auth-container">

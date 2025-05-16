@@ -1,13 +1,12 @@
 import { useState } from "react";
 import './CSS/User.css';
 
-import { View } from '../types.tsx'; // o './types', según la ruta
+import { View } from '../types.tsx';
 import React from "react";
 const UserView = ({ setView }: { setView: (view: View) => void }) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const eliminarCuenta = () => {
-    // Simulación eliminación y redirección a login
     setTimeout(() => setView('login'), 1000);
   };
 

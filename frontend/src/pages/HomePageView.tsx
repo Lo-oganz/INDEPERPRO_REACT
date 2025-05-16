@@ -10,11 +10,9 @@ interface Task {
   id_tarea: number;
   titulo: string;
   descripcion: string;
-  estado: string;
+  estado: 'pendiente' | 'en progreso' | 'completada';
   prioridad: string;
-  fec_vencimiento: string;
   id_usuario: number;
-  id_proyecto: number;
 }
 
 interface User {
@@ -23,52 +21,42 @@ interface User {
 }
 
 interface Props {
-  projectId: number;
   userId: number;
   setView: (view: View) => void;
 }
 
-
-const Homepage: React.FC<Props> = ({ projectId, userId, setView }) => {
+const Homepage: React.FC<Props> = ({ userId, setView }) => {
   const [localView, setLocalView] = useState<'home' | 'profile'>('home');
   const [users, setUsers] = useState<User[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [permiso, setPermiso] = useState<string>('');
-
-  const projectTasks = tasks.filter(task => task.id_proyecto === projectId);
-  const pendientes = projectTasks.filter(task => task.estado.toLowerCase() === 'pendiente');
-  const finalizadas = projectTasks.filter(task => task.estado.toLowerCase() === 'completada');
-  const tareasUsuario = projectTasks.filter(task => task.id_usuario === userId);
 
   useEffect(() => {
     axios.get('http://localhost:3000/api/usuarios')
       .then(response => setUsers(response.data))
       .catch(error => console.error('Error al obtener usuarios:', error));
 
-    axios.get('http://localhost:3000/api/tasks')
+    axios.get('http://localhost:3000/api/tareas')
       .then(response => setTasks(response.data))
       .catch(error => console.error('Error al obtener tareas:', error));
   }, []);
 
-  useEffect(() => {
-    if (!userId || !projectId) return;  // Esperar que existan ambos ids
+  const pendientes = tasks.filter(task => task.estado === 'pendiente');
+  const enProgreso = tasks.filter(task => task.estado === 'en progreso');
+  const finalizadas = tasks.filter(task => task.estado === 'completada');
 
-    axios.get('http://localhost:3000/api/user-projects/permisos', {
-      params: { id_usuario: userId, id_proyecto: projectId }
-    })
-      .then(res => setPermiso(res.data?.permisos || ''))
-      .catch(err => {
-        console.error('Error al obtener permisos:', err);
-        setPermiso('Sin permisos');
-      });
-  }, [userId, projectId]);
+  const tareasAlta = pendientes.filter(t => t.prioridad.toLowerCase() === 'alta');
+  const tareasMedia = pendientes.filter(t => t.prioridad.toLowerCase() === 'media');
+  const tareasBaja = pendientes.filter(t => t.prioridad.toLowerCase() === 'baja');
+
+
+  const tareasUsuario = tasks.filter(task => task.id_usuario === userId);
 
   return (
     <div className="bg">
       <div className="topbar">
-        Proyecto ID: {projectId} — Rol: <strong>{permiso}</strong>
-        <button onClick={() => setView('dashboard')} style={{ float: 'right' }}>
-          Volver al panel
+        Bienvenido — <strong>Tareas</strong>
+        <button onClick={() => setView('login')} style={{ float: 'right' }}>
+          Cerrar sesión
         </button>
       </div>
 
@@ -91,6 +79,12 @@ const Homepage: React.FC<Props> = ({ projectId, userId, setView }) => {
                 <span className="card-label">Tareas pendientes</span>
               </div>
 
+              <p>En progreso</p>
+              <div className='card'>
+                <span className="card-number">{enProgreso.length}</span>
+                <span className="card-label">Tareas en progreso</span>
+              </div>
+
               <p>Finalizadas</p>
               <div className='card'>
                 <span className="card-number">{finalizadas.length}</span>
@@ -99,26 +93,43 @@ const Homepage: React.FC<Props> = ({ projectId, userId, setView }) => {
             </div>
 
             <div className='task-group'>
-              <p>Tareas pendientes</p>
+              <h3>Prioridad Alta</h3>
               <div className="tasks">
-                <div className="task-list">
-                  {pendientes.map(task => {
-                    const user = users.find(u => u.id_usuario === task.id_usuario);
-                    return <TaskCard key={task.id_tarea} task={task} user={user} />;
-                  })}
-                </div>
+                {tareasAlta.length > 0 ? tareasAlta.map(task => {
+                  const user = users.find(u => u.id_usuario === task.id_usuario);
+                  return <TaskCard key={task.id_tarea} task={task} user={user} />;
+                }) : <p>No hay tareas con prioridad alta</p>}
               </div>
             </div>
 
             <div className='task-group'>
-              <p>Mis tareas</p>
+              <h3>Prioridad Media</h3>
               <div className="tasks">
-                <div className="task-list">
-                  {tareasUsuario.map(task => {
-                    const user = users.find(u => u.id_usuario === task.id_usuario);
-                    return <TaskCard key={task.id_tarea} task={task} user={user} />;
-                  })}
-                </div>
+                {tasks.length > 0 ? tasks.map(task => {
+                  const user = users.find(u => u.id_usuario === task.id_usuario);
+                  return <TaskCard key={task.id_tarea} task={task} user={user} />;
+                }) : <p>No hay tareas disponibles</p>}
+              </div>
+
+            </div>
+
+            <div className='task-group'>
+              <h3>Prioridad Baja</h3>
+              <div className="tasks">
+                {tareasBaja.length > 0 ? tareasBaja.map(task => {
+                  const user = users.find(u => u.id_usuario === task.id_usuario);
+                  return <TaskCard key={task.id_tarea} task={task} user={user} />;
+                }) : <p>No hay tareas con prioridad baja</p>}
+              </div>
+            </div>
+
+            <div className='task-group'>
+              <h3>Mis tareas</h3>
+              <div className="tasks">
+                {tareasUsuario.length > 0 ? tareasUsuario.map(task => {
+                  const user = users.find(u => u.id_usuario === task.id_usuario);
+                  return <TaskCard key={task.id_tarea} task={task} user={user} />;
+                }) : <p>No tienes tareas asignadas.</p>}
               </div>
             </div>
           </>

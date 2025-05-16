@@ -1,6 +1,12 @@
 const express = require('express');
 const cors = require('cors');
-const userRoutes = require('./routes/userRoutes');
+
+const etiquetaRoutes = require('./routes/etiquetaRoutes');
+const prioridadRoutes = require('./routes/prioridadRoutes');
+const rolRoutes = require('./routes/rolRoutes');
+const tareaRoutes = require('./routes/tareaRoutes');
+const usuarioRoutes = require('./routes/usuarioRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 const PORT = 3000;
@@ -8,8 +14,13 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/usuarios', userRoutes);
-
+// Rutas
+app.use('/api/etiquetas', etiquetaRoutes);
+app.use('/api/prioridades', prioridadRoutes);
+app.use('/api/roles', rolRoutes);
+app.use('/api/tareas', tareaRoutes);
+app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/auth', authRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);

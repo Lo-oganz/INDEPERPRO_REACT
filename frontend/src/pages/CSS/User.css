@@ -1,8 +1,6 @@
-/* User.css */
-
 .user-container {
   max-width: 600px;
-  margin: 2rem auto; /* Centrado horizontal y margen arriba/abajo */
+  margin: 2rem auto;
   padding: 2rem;
   background-color: #ffffff;
   border-radius: 1rem;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TopbarAuth from '../components/TopbarAuth.tsx';  // Cambiado aquí
+import TopbarAuth from '../components/TopbarAuth.tsx';
 import Footer from '../components/Footer.tsx';
 import InputField from '../components/InputField.tsx';
 import Button from '../components/Button.tsx';
@@ -15,19 +15,21 @@ interface LoginViewProps {
 
 const LoginView: React.FC<LoginViewProps> = ({ setView, setUsername, setUserId }) => {
   const [email, setEmail] = useState('');
-  const [contrasenia, setContrasenia] = useState('');
+  const [password, setPassword] = useState(''); 
   const [error, setError] = useState('');
 
   const handleLogin = () => {
-    const loginData = { email, contrasenia };
+    const loginData = { email, password };
 
-axios.post('http://localhost:3000/api/usuarios/login', loginData)
-        .then(response => {
-          const user = response.data.user;
-          setUserId(user.id);  // Ojo: 'id', no 'id_usuario' como llega del backend
-          setUsername(user.nombre);
-          setView('dashboard');
-        })
+    axios.post('http://localhost:3000/api/auth/login', loginData)
+      .then(response => {
+        const { id_usuario, nombre } = response.data;
+        setUserId(id_usuario);
+        setUsername(nombre);
+        setView('homepage');
+      })
+
+
       .catch(() => {
         setError('Credenciales incorrectas.');
       });
@@ -50,8 +52,8 @@ axios.post('http://localhost:3000/api/usuarios/login', loginData)
           <InputField
             type="password"
             placeholder="Contraseña"
-            value={contrasenia}
-            onChange={(e) => setContrasenia(e.target.value)}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           {error && <p className="error">{error}</p>}
           <Button onClick={handleLogin}>Entrar</Button>
