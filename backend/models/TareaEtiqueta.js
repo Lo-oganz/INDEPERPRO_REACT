@@ -3,7 +3,7 @@ const db = require('../config/db');
 const TareaEtiqueta = {
   add: (id_tarea, id_etiqueta, callback) => {
     db.query(
-      'INSERT INTO tareaEtiqueta (id_tarea, id_etiqueta) VALUES (?, ?)',
+      'INSERT INTO tarea_etiqueta (id_tarea, id_etiqueta) VALUES (?, ?)',
       [id_tarea, id_etiqueta],
       callback
     );
@@ -12,7 +12,7 @@ const TareaEtiqueta = {
   getEtiquetasByTarea: (id_tarea, callback) => {
     db.query(
       `SELECT e.* FROM etiqueta e
-       JOIN tareaEtiqueta te ON e.id_etiqueta = te.id_etiqueta
+       JOIN tarea_etiqueta te ON e.id_etiqueta = te.id_etiqueta
        WHERE te.id_tarea = ?`,
       [id_tarea],
       callback
@@ -20,7 +20,7 @@ const TareaEtiqueta = {
   },
 
   deleteAllForTarea: (id_tarea, callback) => {
-    db.query('DELETE FROM tareaEtiqueta WHERE id_tarea = ?', [id_tarea], callback);
+    db.query('DELETE FROM tarea_etiqueta WHERE id_tarea = ?', [id_tarea], callback);
   }
 };
 

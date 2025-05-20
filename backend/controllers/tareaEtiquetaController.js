@@ -1,31 +1,39 @@
-const TareaEtiqueta = require('../models/TareaEtiqueta');
+const pool = require('../config/db');
 
-exports.agregarEtiqueta = (req, res) => {
+exports.agregarEtiqueta = async (req, res) => {
   const { id_tarea, id_etiqueta } = req.body;
-  if (!id_tarea || !id_etiqueta) {
-    return res.status(400).json({ error: 'Faltan datos obligatorios' });
+
+  try {
+    await pool.query('INSERT INTO tarea_etiqueta (id_tarea, id_etiqueta) VALUES (?, ?)', [id_tarea, id_etiqueta]);
+    res.status(201).json({ message: 'Etiqueta agregada a la tarea' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al agregar la etiqueta' });
   }
-
-  TareaEtiqueta.add(id_tarea, id_etiqueta, (err, result) => {
-    if (err) return res.status(500).json({ error: 'Error al asociar etiqueta' });
-    res.json({ message: 'Etiqueta agregada a la tarea' });
-  });
 };
 
-exports.obtenerEtiquetasDeTarea = (req, res) => {
-  const id_tarea = req.params.id;
+exports.obtenerEtiquetasDeTarea = async (req, res) => {
+  const { id } = req.params;
 
-  TareaEtiqueta.getEtiquetasByTarea(id_tarea, (err, etiquetas) => {
-    if (err) return res.status(500).json({ error: 'Error al obtener etiquetas' });
-    res.json(etiquetas);
-  });
+  try {
+    const [rows] = await pool.query(
+      `SELECT e.* FROM etiquetas e 
+       JOIN tarea_etiqueta te ON e.id_etiqueta = te.id_etiqueta 
+       WHERE te.id_tarea = ?`, [id]
+    );
+
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener las etiquetas' });
+  }
 };
 
-exports.eliminarEtiquetasDeTarea = (req, res) => {
-  const id_tarea = req.params.id;
+exports.eliminarEtiquetasDeTarea = async (req, res) => {
+  const { id } = req.params;
 
-  TareaEtiqueta.deleteAllForTarea(id_tarea, (err) => {
-    if (err) return res.status(500).json({ error: 'Error al eliminar etiquetas' });
+  try {
+    await pool.query('DELETE FROM tarea_etiqueta WHERE id_tarea = ?', [id]);
     res.json({ message: 'Etiquetas eliminadas de la tarea' });
-  });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar las etiquetas' });
+  }
 };

@@ -1,26 +1,30 @@
-const Etiqueta = require('../models/Etiqueta');
+const pool = require('../config/db');
 
-exports.getAllEtiquetas = (req, res) => {
-  Etiqueta.getAll((err, results) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json(results);
-  });
+exports.getAllEtiquetas = async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM etiquetas');
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener etiquetas' });
+  }
 };
 
-exports.createEtiqueta = (req, res) => {
+exports.createEtiqueta = async (req, res) => {
   const { nombre } = req.body;
-  if (!nombre) return res.status(400).json({ error: 'El nombre es obligatorio' });
-
-  Etiqueta.create(nombre, (err, result) => {
-    if (err) return res.status(500).json({ error: err });
-    res.status(201).json({ message: 'Etiqueta creada', id: result.insertId });
-  });
+  try {
+    const [result] = await pool.query('INSERT INTO etiquetas (nombre) VALUES (?)', [nombre]);
+    res.status(201).json({ id_etiqueta: result.insertId, nombre });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear etiqueta' });
+  }
 };
 
-exports.deleteEtiqueta = (req, res) => {
-  const id = req.params.id;
-  Etiqueta.delete(id, (err) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json({ message: 'Etiqueta eliminada' });
-  });
+exports.deleteEtiqueta = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM etiquetas WHERE id_etiqueta = ?', [id]);
+    res.json({ message: 'Etiqueta eliminada correctamente' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar etiqueta' });
+  }
 };

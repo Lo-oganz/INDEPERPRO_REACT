@@ -1,46 +1,52 @@
-const Rol = require('../models/Rol');
+const pool = require('../config/db');
 
-exports.getAllRoles = (req, res) => {
-  Rol.getAll((err, results) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json(results);
-  });
+exports.getAllRoles = async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM roles');
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener los roles' });
+  }
 };
 
-exports.getRolById = (req, res) => {
-  const id = req.params.id;
-  Rol.getById(id, (err, result) => {
-    if (err) return res.status(500).json({ error: err });
-    if (!result.length) return res.status(404).json({ error: 'Rol no encontrado' });
-    res.json(result[0]);
-  });
+exports.getRolById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [rows] = await pool.query('SELECT * FROM roles WHERE id_rol = ?', [id]);
+    if (rows.length === 0) return res.status(404).json({ error: 'Rol no encontrado' });
+    res.json(rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener el rol' });
+  }
 };
 
-exports.createRol = (req, res) => {
+exports.createRol = async (req, res) => {
   const { nombre } = req.body;
-  if (!nombre) return res.status(400).json({ error: 'El nombre del rol es obligatorio' });
-
-  Rol.create(nombre, (err, result) => {
-    if (err) return res.status(500).json({ error: err });
-    res.status(201).json({ message: 'Rol creado', id: result.insertId });
-  });
+  try {
+    const [result] = await pool.query('INSERT INTO roles (nombre) VALUES (?)', [nombre]);
+    res.status(201).json({ id_rol: result.insertId, nombre });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear el rol' });
+  }
 };
 
-exports.updateRol = (req, res) => {
-  const id = req.params.id;
+exports.updateRol = async (req, res) => {
+  const { id } = req.params;
   const { nombre } = req.body;
-  if (!nombre) return res.status(400).json({ error: 'El nombre del rol es obligatorio' });
-
-  Rol.update(id, nombre, (err) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json({ message: 'Rol actualizado' });
-  });
+  try {
+    await pool.query('UPDATE roles SET nombre = ? WHERE id_rol = ?', [nombre, id]);
+    res.json({ message: 'Rol actualizado correctamente' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar el rol' });
+  }
 };
 
-exports.deleteRol = (req, res) => {
-  const id = req.params.id;
-  Rol.delete(id, (err) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json({ message: 'Rol eliminado' });
-  });
+exports.deleteRol = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM roles WHERE id_rol = ?', [id]);
+    res.json({ message: 'Rol eliminado correctamente' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar el rol' });
+  }
 };

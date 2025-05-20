@@ -12,37 +12,27 @@ const Usuario = {
 
   create: (data, callback) => {
     const { nombre, email, password } = data;
-    const id_rol = 2;  // fijo al crear
+    const id_rol = 2;  // fijo
 
-    bcrypt.hash(password, 10, (err, hashedPassword) => {
+    bcrypt.hash(password, 10, (err, hash) => {
       if (err) return callback(err);
-
       db.query(
         'INSERT INTO usuario (nombre, email, password, id_rol) VALUES (?, ?, ?, ?)',
-        [nombre, email, hashedPassword, id_rol],
+        [nombre, email, hash, id_rol],
         callback
       );
     });
-  },
-
-  assignRole: (id_usuario, id_rol, callback) => {
-    db.query(
-      'UPDATE usuario SET id_rol = ? WHERE id_usuario = ?',
-      [id_rol, id_usuario],
-      callback
-    );
   },
 
   update: (id, data, callback) => {
     const { nombre, email, password, id_rol } = data;
 
     if (password) {
-      bcrypt.hash(password, 10, (err, hashedPassword) => {
+      bcrypt.hash(password, 10, (err, hash) => {
         if (err) return callback(err);
-
         db.query(
           'UPDATE usuario SET nombre = ?, email = ?, password = ?, id_rol = ? WHERE id_usuario = ?',
-          [nombre, email, hashedPassword, id_rol, id],
+          [nombre, email, hash, id_rol, id],
           callback
         );
       });
