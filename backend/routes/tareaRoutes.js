@@ -7,5 +7,6 @@ router.get('/:id', tareaController.getTareaById);
 router.post('/', tareaController.createTarea);
 router.put('/:id', tareaController.updateTarea);
 router.delete('/:id', tareaController.deleteTarea);
+router.get('/usuario/:id_usuario', tareaController.getByUsuario);
 
 module.exports = router;

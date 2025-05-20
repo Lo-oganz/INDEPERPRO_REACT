@@ -23,13 +23,21 @@ const LoginView: React.FC<LoginViewProps> = ({ setView, setUsername, setUserId }
 
     axios.post('http://localhost:3000/api/auth/login', loginData)
       .then(response => {
-        const { id_usuario, nombre } = response.data;
+        const { id_usuario, nombre, id_rol } = response.data.usuario;
         setUserId(id_usuario);
         setUsername(nombre);
-        setView('homepage');
+        localStorage.setItem('userId', id_usuario.toString());
+        localStorage.setItem('userRole', id_rol.toString());
+
+        // Redirige según rol
+        if (id_rol === 1) {
+          setView('adminView');
+        } else if (id_rol === 3) {
+          setView('jefeProyectoView');
+        } else {
+          setView('homepage');
+        }
       })
-
-
       .catch(() => {
         setError('Credenciales incorrectas.');
       });

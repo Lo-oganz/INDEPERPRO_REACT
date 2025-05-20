@@ -1,37 +1,31 @@
 const TareaEtiqueta = require('../models/TareaEtiqueta');
 
-exports.getAllTareaEtiquetas = (req, res) => {
-  TareaEtiqueta.getAll((err, results) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json(results);
-  });
-};
-
-exports.getTareaEtiquetaById = (req, res) => {
-  const id = req.params.id;
-  TareaEtiqueta.getById(id, (err, result) => {
-    if (err) return res.status(500).json({ error: err });
-    if (!result.length) return res.status(404).json({ error: 'Relación no encontrada' });
-    res.json(result[0]);
-  });
-};
-
-exports.assignEtiquetaToTarea = (req, res) => {
+exports.agregarEtiqueta = (req, res) => {
   const { id_tarea, id_etiqueta } = req.body;
   if (!id_tarea || !id_etiqueta) {
-    return res.status(400).json({ error: 'Faltan campos obligatorios' });
+    return res.status(400).json({ error: 'Faltan datos obligatorios' });
   }
 
-  TareaEtiqueta.assignEtiquetaToTarea(id_tarea, id_etiqueta, (err, result) => {
-    if (err) return res.status(500).json({ error: err });
-    res.status(201).json({ message: 'Etiqueta asignada a tarea', id: result.insertId });
+  TareaEtiqueta.add(id_tarea, id_etiqueta, (err, result) => {
+    if (err) return res.status(500).json({ error: 'Error al asociar etiqueta' });
+    res.json({ message: 'Etiqueta agregada a la tarea' });
   });
 };
 
-exports.deleteTareaEtiqueta = (req, res) => {
-  const id = req.params.id;
-  TareaEtiqueta.delete(id, (err) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json({ message: 'Relación eliminada' });
+exports.obtenerEtiquetasDeTarea = (req, res) => {
+  const id_tarea = req.params.id;
+
+  TareaEtiqueta.getEtiquetasByTarea(id_tarea, (err, etiquetas) => {
+    if (err) return res.status(500).json({ error: 'Error al obtener etiquetas' });
+    res.json(etiquetas);
+  });
+};
+
+exports.eliminarEtiquetasDeTarea = (req, res) => {
+  const id_tarea = req.params.id;
+
+  TareaEtiqueta.deleteAllForTarea(id_tarea, (err) => {
+    if (err) return res.status(500).json({ error: 'Error al eliminar etiquetas' });
+    res.json({ message: 'Etiquetas eliminadas de la tarea' });
   });
 };

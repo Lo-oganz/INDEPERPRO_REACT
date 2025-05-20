@@ -36,15 +36,23 @@ const Usuario = {
   update: (id, data, callback) => {
     const { nombre, email, password, id_rol } = data;
 
-    bcrypt.hash(password, 10, (err, hashedPassword) => {
-      if (err) return callback(err);
+    if (password) {
+      bcrypt.hash(password, 10, (err, hashedPassword) => {
+        if (err) return callback(err);
 
+        db.query(
+          'UPDATE usuario SET nombre = ?, email = ?, password = ?, id_rol = ? WHERE id_usuario = ?',
+          [nombre, email, hashedPassword, id_rol, id],
+          callback
+        );
+      });
+    } else {
       db.query(
-        'UPDATE usuario SET nombre = ?, email = ?, password = ?, id_rol = ? WHERE id_usuario = ?',
-        [nombre, email, hashedPassword, id_rol, id],
+        'UPDATE usuario SET nombre = ?, email = ?, id_rol = ? WHERE id_usuario = ?',
+        [nombre, email, id_rol, id],
         callback
       );
-    });
+    }
   },
 
   delete: (id, callback) => {

@@ -1,3 +1,4 @@
+// backend/controllers/authController.js
 const bcrypt = require('bcrypt');
 const User = require('../models/Usuario');
 
@@ -27,9 +28,15 @@ exports.login = (req, res) => {
         return res.status(401).json({ error: 'Contraseña incorrecta' });
       }
 
+      // Devolvemos el rol también aquí
       res.json({ 
         message: 'Inicio de sesión exitoso', 
-        usuario: { id: user.id_usuario, nombre: user.nombre, email: user.email }
+        usuario: { 
+          id_usuario: user.id_usuario, 
+          nombre: user.nombre, 
+          email: user.email,
+          id_rol: user.id_rol  // <-- Añadido
+        }
       });
     });
   });

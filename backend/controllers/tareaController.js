@@ -1,4 +1,4 @@
-const Tarea = require('../models/tarea');
+const Tarea = require('../models/Tarea');
 
 exports.getAllTareas = (req, res) => {
   Tarea.getAll((err, results) => {
@@ -37,5 +37,13 @@ exports.deleteTarea = (req, res) => {
   Tarea.delete(id, (err) => {
     if (err) return res.status(500).json({ error: err });
     res.json({ message: 'Tarea eliminada' });
+  });
+};
+
+exports.getByUsuario = (req, res) => {
+  const id_usuario = req.params.id_usuario;
+  Tarea.getByUsuario(id_usuario, (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(results);
   });
 };

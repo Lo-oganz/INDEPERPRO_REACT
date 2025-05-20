@@ -11,14 +11,6 @@ const Prioridad = {
 
   create: (nivel, callback) => {
     db.query('INSERT INTO prioridad (nivel) VALUES (?)', [nivel], callback);
-  },
-
-  update: (id, nivel, callback) => {
-    db.query('UPDATE prioridad SET nivel = ? WHERE id_prioridad = ?', [nivel, id], callback);
-  },
-
-  delete: (id, callback) => {
-    db.query('DELETE FROM prioridad WHERE id_prioridad = ?', [id], callback);
   }
 };
 
