@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './TaskCard.css';
 
+interface Etiqueta {
+  id_etiqueta: number;
+  nombre: string;
+}
+
 interface Task {
   id_tarea: number;
   titulo: string;
@@ -9,6 +14,7 @@ interface Task {
   estado: 'pendiente' | 'en progreso' | 'completada';
   prioridad: string;
   id_usuario: number;
+  etiquetas: Etiqueta[]; 
 }
 
 interface User {
@@ -77,6 +83,13 @@ const TaskCard: React.FC<Props> = ({ task, user, editable = false, onStatusChang
         <p>
           <strong>Asignado a:</strong> {user ? user.nombre : 'Desconocido'}
         </p>
+        <p>
+          <strong>Etiquetas:</strong>{' '}
+          {task.etiquetas && task.etiquetas.length > 0
+            ? task.etiquetas.map(et => et.nombre).join(', ')
+            : 'Ninguna'}
+        </p>
+
       </div>
 
       {showPopup && (

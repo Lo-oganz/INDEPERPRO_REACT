@@ -6,6 +6,11 @@ import UserView from './Profile.tsx';
 import { Home, User } from 'lucide-react';
 import { View } from '../types.tsx';
 
+interface Etiqueta {
+  id_etiqueta: number;
+  nombre: string;
+}
+
 interface Task {
   id_tarea: number;
   titulo: string;
@@ -13,11 +18,11 @@ interface Task {
   estado: 'pendiente' | 'en progreso' | 'completada';
   prioridad: string;
   id_usuario: number;
+  etiquetas: Etiqueta[]; // ✅ AÑADIDO
 }
 
 interface User {
   id_usuario: number;
-  
   nombre: string;
 }
 
@@ -31,23 +36,41 @@ const Homepage: React.FC<Props> = ({ userId, userRole, setView }) => {
   const [localView, setLocalView] = useState<'home' | 'profile'>('home');
   const [users, setUsers] = useState<User[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
-const storedUserId = parseInt(localStorage.getItem('userId') || '0'); // ✅
+  const [etiquetas, setEtiquetas] = useState<Etiqueta[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedEtiqueta, setSelectedEtiqueta] = useState('');
 
-useEffect(() => {
-  axios.get('http://localhost:3000/api/usuarios')
-    .then(response => setUsers(response.data))
-    .catch(error => console.error('Error al obtener usuarios:', error));
+  const storedUserId = parseInt(localStorage.getItem('userId') || '0');
 
-  axios.get('http://localhost:3000/api/tareas')
-    .then(response => setTasks(response.data))
-    .catch(error => console.error('Error al obtener tareas:', error));
-}, []);
+  useEffect(() => {
+    axios.get('http://localhost:3000/api/usuarios')
+      .then(response => setUsers(response.data))
+      .catch(error => console.error('Error al obtener usuarios:', error));
 
+    axios.get('http://localhost:3000/api/tareas')
+      .then(response => setTasks(response.data))
+      .catch(error => console.error('Error al obtener tareas:', error));
+
+    axios.get('http://localhost:3000/api/etiquetas')
+      .then(response => setEtiquetas(response.data))
+      .catch(error => console.error('Error al obtener etiquetas:', error));
+  }, []);
+
+  const filtrarTareas = (t: Task) => {
+    const coincideTexto = t.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          t.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const coincideEtiqueta =
+      selectedEtiqueta === '' ||
+      t.etiquetas?.some(et => et.nombre.toLowerCase() === selectedEtiqueta.toLowerCase());
+
+    return coincideTexto && coincideEtiqueta;
+  };
 
   return (
     <div className="bg">
       <div className="topbar">
-        Bienvenido — <strong>Tareas</strong>
+        <strong>Tareas</strong>
         <input
           type="text"
           placeholder="Buscar tareas..."
@@ -85,14 +108,14 @@ useEffect(() => {
             <User size={24} />
           </div>
           {userRole === 3 && (
-          <button
-            onClick={() => setView('newTask')}
-            className="btn-new-task"
-            style={{ marginBottom: '20px' }}
-          >
-            Nueva tarea
-          </button>
-        )}
+            <button
+              onClick={() => setView('newTask')}
+              className="btn-new-task"
+              style={{ marginBottom: '20px' }}
+            >
+              Nueva tarea
+            </button>
+          )}
         </div>
 
         {localView === 'home' && (
@@ -100,31 +123,52 @@ useEffect(() => {
             <div className="task-group">
               <h3>Todas las tareas</h3>
               <div className="tasks">
-                {tasks.length > 0 ? tasks.map(task => {
-                  const user = users.find(u => u.id_usuario === task.id_usuario);
-                  return <TaskCard key={task.id_tarea} task={task} user={user} />;
-                }) : <p>No hay tareas registradas.</p>}
+                {tasks.filter(filtrarTareas).length > 0 ? (
+                  tasks.filter(filtrarTareas).map(task => {
+                    const user = users.find(u => u.id_usuario === task.id_usuario);
+                    return (
+                      <TaskCard
+                        key={task.id_tarea}
+                        task={task}
+                        user={user}
+                      />
+                    );
+                  })
+                ) : (
+                  <p>No hay tareas que coincidan.</p>
+                )}
               </div>
             </div>
 
             <div className="task-group">
               <h3>Mis tareas</h3>
               <div className="tasks">
-                {tasks.filter(task => task.id_usuario === storedUserId).length > 0 ? (
+                {tasks.filter(task => task.id_usuario === storedUserId && filtrarTareas(task)).length > 0 ? (
                   tasks
-                    .filter(task => task.id_usuario === storedUserId)
+                    .filter(task => task.id_usuario === storedUserId && filtrarTareas(task))
                     .map(task => {
                       const user = users.find(u => u.id_usuario === task.id_usuario);
-                      return <TaskCard key={task.id_tarea} task={task} user={user} />;
+                      return (
+                        <TaskCard
+                          key={task.id_tarea}
+                          task={task}
+                          user={user}
+                          editable={true}
+                          onStatusChange={(updatedTask) => {
+                            setTasks((prevTasks) =>
+                              prevTasks.map((t) => (t.id_tarea === updatedTask.id_tarea ? updatedTask : t))
+                            );
+                          }}
+                        />
+                      );
                     })
                 ) : (
-                  <p>No tienes tareas asignadas.</p>
+                  <p>No tienes tareas asignadas que coincidan.</p>
                 )}
               </div>
             </div>
           </>
         )}
-        
 
         {localView === 'profile' && <UserView setView={setView} />}
       </div>

@@ -6,6 +6,11 @@ import { Home, User, MoreHorizontal, Plus } from 'lucide-react';
 import { View } from '../types.tsx';
 import './CSS/jefeProyecto.css';
 
+interface Etiqueta {
+  id_etiqueta: number;
+  nombre: string;
+}
+
 interface Task {
   id_tarea: number;
   titulo: string;
@@ -13,6 +18,7 @@ interface Task {
   estado: 'pendiente' | 'en progreso' | 'completada';
   prioridad: string;
   id_usuario: number;
+  etiquetas: Etiqueta[]; 
 }
 
 interface User {

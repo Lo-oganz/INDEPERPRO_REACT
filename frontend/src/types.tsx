@@ -17,6 +17,11 @@ export interface User {
 
 export type EstadoTarea = 'pendiente' | 'en progreso' | 'completada';
 
+export interface Etiqueta {
+  id_etiqueta: number;
+  nombre: string;
+}
+
 export interface Task {
   id_tarea: number;
   titulo: string;
@@ -24,4 +29,5 @@ export interface Task {
   estado: EstadoTarea;
   prioridad?: string;
   id_usuario: number;
+  etiquetas: Etiqueta[];
 }

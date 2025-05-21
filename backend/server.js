@@ -7,7 +7,6 @@ const rolRoutes = require('./routes/rolRoutes');
 const tareaRoutes = require('./routes/tareaRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes');
 const authRoutes = require('./routes/authRoutes');
-const tareaEtiquetaRoutes = require('./routes/tareaEtiquetaRoutes');
 
 const app = express();
 const PORT = 3000;
@@ -21,7 +20,6 @@ app.use('/api/etiquetas', etiquetaRoutes);
 app.use('/api/prioridades', prioridadRoutes);
 app.use('/api/roles', rolRoutes);
 app.use('/api/tareas', tareaRoutes);
-app.use('/api/tarea-etiqueta', tareaEtiquetaRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
