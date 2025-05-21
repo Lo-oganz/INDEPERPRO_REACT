@@ -1,18 +1,13 @@
 
-.content {
-  width: 100%;
-  height: 100vh;
-  display: block; /* ya no usamos flex para centrar */
-  overflow-y: auto;
+.bg {
+    background-color: teal;
 }
-
 .new-task-container {
-  max-width: 100%;
-  min-width: 100%;
-  height: 100%;
+  width: 100%;
+  height: 90%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center; /* Alineación al inicio */
   justify-content: flex-start;
   padding: 2rem;
   box-sizing: border-box;
@@ -25,14 +20,13 @@
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
               rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
               rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-  width: 40%;
-  min-width: 300px;
+  width: 100%; /* Ocupa todo el ancho del contenedor padre */
+  max-width: 600px; /* Opcional: limita en pantallas muy grandes */
   padding: 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
 }
-
 .bg {
   min-height: 100vh;
   width: 100%;
@@ -42,7 +36,9 @@
 
 .new-task-title {
   font-size: 2rem;
-  margin-bottom: 1.5rem;
+    margin:0;
+
+  margin-bottom: 2rem;
   font-weight: bold;
 }
 

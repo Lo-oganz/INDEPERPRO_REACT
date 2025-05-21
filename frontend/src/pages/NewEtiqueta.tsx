@@ -35,7 +35,19 @@ const NewEtiquetaView: React.FC<Props> = ({ setView }) => {
   };
 
   return (
-    <div className="new-task-container">
+    <div className='bg'>
+        <div className="topbar">
+      <button
+        onClick={() => {
+          localStorage.clear();
+          setView('login');
+        }}
+        style={{ float: 'right' }}
+      >
+        Cerrar sesión
+      </button>
+    </div>
+<div className="new-task-container">
       <h3 className="new-task-title">Crear Nueva Etiqueta</h3>
 
       <form onSubmit={handleSubmit} className="new-task-form">
@@ -81,6 +93,8 @@ const NewEtiquetaView: React.FC<Props> = ({ setView }) => {
         </div>
       </form>
     </div>
+    </div>
+    
   );
 };
 

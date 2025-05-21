@@ -73,7 +73,6 @@ const AdminView: React.FC<Props> = ({ setView }) => {
     <div className="bg">
       {/* Topbar igual que en Homepage */}
       <div className="topbar">
-        <strong>Gestión Admin</strong>
         <button
           onClick={() => {
             localStorage.removeItem('userId');
@@ -88,7 +87,6 @@ const AdminView: React.FC<Props> = ({ setView }) => {
       </div>
 
 
-      {/* Content */}
       <div className="content" style={{ marginLeft: '10vh', paddingTop: '10vh' }}>
         {localView === 'home' && (
           <>

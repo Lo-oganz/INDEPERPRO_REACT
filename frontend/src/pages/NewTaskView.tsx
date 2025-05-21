@@ -97,7 +97,6 @@ return (
       </button>
     </div>
 
-    <div className="content">
       <div className="new-task-container">
         <h3 className="new-task-title">Crear Nueva Tarea</h3>
 
@@ -202,7 +201,6 @@ return (
             </button>
           </div>
         </form>
-      </div>
     </div>
   </div>
 );
