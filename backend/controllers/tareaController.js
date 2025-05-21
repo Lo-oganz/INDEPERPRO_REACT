@@ -3,11 +3,16 @@ const pool = require('../config/db');
 exports.getAllTareas = (req, res) => {
   const { id_usuario } = req.query;
 
-  let query = 'SELECT * FROM tarea';
+  let query = `
+    SELECT t.id_tarea, t.titulo, t.descripcion, t.estado, t.fecha_vencimiento,
+           t.id_usuario, p.nombre AS prioridad
+    FROM tarea t
+    JOIN prioridad p ON t.id_prioridad = p.id_prioridad
+  `;
   const params = [];
 
   if (id_usuario) {
-    query += ' WHERE id_usuario = ?';
+    query += ' WHERE t.id_usuario = ?';
     params.push(id_usuario);
   }
 
@@ -17,11 +22,18 @@ exports.getAllTareas = (req, res) => {
   });
 };
 
-
 exports.getTareaById = (req, res) => {
   const { id } = req.params;
 
-  pool.query('SELECT * FROM tarea WHERE id_tarea = ?', [id], (error, results) => {
+  const query = `
+    SELECT t.id_tarea, t.titulo, t.descripcion, t.estado, t.fecha_vencimiento,
+           t.id_usuario, p.nombre AS prioridad
+    FROM tarea t
+    JOIN prioridad p ON t.id_prioridad = p.id_prioridad
+    WHERE t.id_tarea = ?
+  `;
+
+  pool.query(query, [id], (error, results) => {
     if (error) return res.status(500).json({ error: 'Error al obtener la tarea' });
     if (results.length === 0) return res.status(404).json({ error: 'Tarea no encontrada' });
     res.json(results[0]);
@@ -69,7 +81,15 @@ exports.deleteTarea = (req, res) => {
 exports.getByUsuario = (req, res) => {
   const { id_usuario } = req.params;
 
-  pool.query('SELECT * FROM tarea WHERE id_usuario = ?', [id_usuario], (error, results) => {
+  const query = `
+    SELECT t.id_tarea, t.titulo, t.descripcion, t.estado, t.fecha_vencimiento,
+           t.id_usuario, p.nombre AS prioridad
+    FROM tarea t
+    JOIN prioridad p ON t.id_prioridad = p.id_prioridad
+    WHERE t.id_usuario = ?
+  `;
+
+  pool.query(query, [id_usuario], (error, results) => {
     if (error) return res.status(500).json({ error: 'Error al obtener las tareas del usuario' });
     res.json(results);
   });

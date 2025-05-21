@@ -1,45 +1,41 @@
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const db = require('../config/db');
-require('dotenv').config();
 
-exports.login = async (req, res) => {
-  const { email, contrasena } = req.body;
+exports.login = (req, res) => {
+  const { email, password } = req.body;
 
-  try {
-    const [[user]] = await db.query('SELECT * FROM usuario WHERE email = ?', [email]);
+  db.query('SELECT * FROM usuario WHERE email = ?', [email], (error, results) => {
+    if (error) {
+      console.error('Error al buscar usuario:', error);
+      return res.status(500).json({ error: 'Error en el servidor' });
+    }
 
-    if (!user) {
+    if (results.length === 0) {
       return res.status(401).json({ error: 'Usuario no encontrado' });
     }
 
-    const match = await bcrypt.compare(contrasena, user.contrasena);
-    if (!match) {
-      return res.status(401).json({ error: 'Contraseña incorrecta' });
-    }
+    const user = results[0];
 
-    const token = jwt.sign(
-      {
-        id_usuario: user.id_usuario,
-        id_rol: user.id_rol,
-        email: user.email
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    res.json({
-      message: 'Inicio de sesión exitoso',
-      token,
-      usuario: {
-        id_usuario: user.id_usuario,
-        nombre: user.nombre,
-        email: user.email,
-        id_rol: user.id_rol
+    bcrypt.compare(password, user.password, (err, isMatch) => {
+      if (err) {
+        console.error('Error al comparar contraseñas:', err);
+        return res.status(500).json({ error: 'Error en el servidor' });
       }
+
+      if (!isMatch) {
+        return res.status(401).json({ error: 'Contraseña incorrecta' });
+      }
+
+      // ✅ Éxito - Devolver los datos del usuario (sin token)
+      res.json({
+        message: 'Login exitoso',
+        usuario: {
+          id_usuario: user.id_usuario,
+          nombre: user.nombre,
+          email: user.email,
+          id_rol: user.id_rol
+        }
+      });
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error en el servidor' });
-  }
+  });
 };
