@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import WelcomeView from './pages/WelcomeView.tsx';
 import LoginView from './pages/LoginView.tsx';
 import RegisterView from './pages/RegisterView.tsx';
@@ -14,6 +14,19 @@ const NavManager = () => {
   const [userId, setUserId] = useState<number | null>(null);
   const [userRole, setUserRole] = useState<number | null>(null);
 
+  useEffect(() => {
+    const storedId = localStorage.getItem('userId');
+    const storedRole = localStorage.getItem('userRole');
+    const storedName = localStorage.getItem('username');
+
+    if (storedId && storedRole) {
+      setUserId(Number(storedId));
+      setUserRole(Number(storedRole));
+      setUsername(storedName || '');
+      setView('homepage');
+    }
+  }, []);
+  
   return (
     <>
       {view === 'welcome' && <WelcomeView setView={setView} />}
