@@ -3,7 +3,7 @@ import WelcomeView from './pages/WelcomeView.tsx';
 import LoginView from './pages/LoginView.tsx';
 import RegisterView from './pages/RegisterView.tsx';
 import Homepage from './pages/HomePageView.tsx';
-import NewProjectView from './pages/NewTaskView.tsx';
+import NewTaskView from './pages/NewTaskView.tsx';
 import AdminView from './pages/AdminView.tsx';
 import JefeProyectoView from './pages/JefeProyectoView.tsx';
 import { View } from './types';
@@ -26,7 +26,7 @@ const NavManager = () => {
       setView('homepage');
     }
   }, []);
-  
+
   return (
     <>
       {view === 'welcome' && <WelcomeView setView={setView} />}
@@ -42,11 +42,13 @@ const NavManager = () => {
       {view === 'homepage' && userId !== null && userRole !== null && (
         <Homepage userId={userId} userRole={userRole} setView={setView} />
       )}
-      {view === 'newProject' && userId !== null && userRole === 3 && (
-        <NewProjectView setView={setView} userId={userId} />
+      {view === 'newTask' && userId !== null && userRole === 3 && (
+        <NewTaskView setView={setView} userId={userId} />  // Cambiado el view y el componente
       )}
       {view === 'adminView' && userRole === 1 && <AdminView />}
-      {view === 'jefeProyectoView' && userRole === 3 && <JefeProyectoView />}
+      {view === 'jefeProyectoView' && userId !== null && userRole === 3 && (
+        <JefeProyectoView userId={userId} userRole={userRole} setView={setView} />
+      )}
     </>
   );
 };

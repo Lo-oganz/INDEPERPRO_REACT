@@ -48,9 +48,31 @@ useEffect(() => {
     <div className="bg">
       <div className="topbar">
         Bienvenido — <strong>Tareas</strong>
-        <button onClick={() => {
-            localStorage.removeItem('userId'); // ✅ limpiamos
-            setView('login'); }} style={{ float: 'right' }}>Cerrar sesión
+        <input
+          type="text"
+          placeholder="Buscar tareas..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
+        <select
+          className="etiqueta-filter"
+          value={selectedEtiqueta}
+          onChange={(e) => setSelectedEtiqueta(e.target.value)}
+        >
+          <option value="">Todas las etiquetas</option>
+          {etiquetas.map((et) => (
+            <option key={et.id_etiqueta} value={et.nombre}>{et.nombre}</option>
+          ))}
+        </select>
+        <button
+          onClick={() => {
+            localStorage.removeItem('userId');
+            setView('login');
+          }}
+          style={{ float: 'right' }}
+        >
+          Cerrar sesión
         </button>
       </div>
 
@@ -64,7 +86,7 @@ useEffect(() => {
           </div>
           {userRole === 3 && (
           <button
-            onClick={() => setView('newProject')}
+            onClick={() => setView('newTask')}
             className="btn-new-task"
             style={{ marginBottom: '20px' }}
           >

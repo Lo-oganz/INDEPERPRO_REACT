@@ -1,0 +1,96 @@
+.new-task-container {
+  height: 100%;
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.new-task-title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.new-task-form {
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+              rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+              rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  width: 40%;
+  min-width: 300px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.new-task-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.new-task-form input,
+.new-task-form textarea,
+.new-task-form select {
+  margin-top: 0.5rem;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.new-task-form input:focus,
+.new-task-form textarea:focus,
+.new-task-form select:focus {
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3);
+}
+
+.new-task-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.new-task-buttons button {
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.new-task-buttons .create-btn {
+  background-color: #4A90E2;
+  color: white;
+}
+
+.new-task-buttons .create-btn:hover {
+  background-color: #357ABD;
+}
+
+.new-task-buttons .cancel-btn {
+  background-color: transparent;
+  color: #666;
+  text-decoration: underline;
+}
+
+.new-task-buttons .cancel-btn:hover {
+  color: #111;
+}
+
+.error-message {
+  color: #e53935;
+  font-weight: 600;
+}

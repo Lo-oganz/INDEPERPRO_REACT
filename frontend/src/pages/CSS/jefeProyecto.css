@@ -160,20 +160,16 @@ margin-left: 3rem;
     margin-top: 15px;
 }
 
-.search-input {
-  margin-left: 2rem;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  width: 200px;
+.descripcion-rol {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  color: #555;
+  max-width: 600px;
 }
 
-.etiqueta-filter {
-  margin-left: 1rem;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  background-color: white;
+.options-view-jp {
+  margin-left: 12vh;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #333;
 }

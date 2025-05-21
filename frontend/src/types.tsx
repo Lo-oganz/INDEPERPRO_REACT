@@ -4,7 +4,7 @@ export type View =
   | 'register'
   | 'homepage'
   | 'profile'
-  | 'newProject'
+  | 'newTask'
   | 'adminView'
   | 'jefeProyectoView';
 
@@ -12,13 +12,16 @@ export interface User {
   id_usuario: number;
   nombre: string;
   email: string;
-  id_rol?: number;  // opcional porque no siempre se usa
+  id_rol?: number;  
 }
+
+export type EstadoTarea = 'pendiente' | 'en progreso' | 'completada';
 
 export interface Task {
   id_tarea: number;
   titulo: string;
   descripcion: string;
-  estado: string;
+  estado: EstadoTarea;
+  prioridad?: string;
   id_usuario: number;
 }
