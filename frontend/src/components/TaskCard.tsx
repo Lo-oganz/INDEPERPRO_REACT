@@ -1,3 +1,5 @@
+// TaskCard.tsx (modificado)
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import './TaskCard.css';
@@ -14,7 +16,7 @@ interface Task {
   estado: 'pendiente' | 'en progreso' | 'completada';
   prioridad: string;
   id_usuario: number;
-  etiquetas: Etiqueta[]; 
+  etiqueta: Etiqueta | null; // SOLO UNA etiqueta, puede ser null si no tiene etiqueta
 }
 
 interface User {
@@ -25,8 +27,8 @@ interface User {
 interface Props {
   task: Task;
   user: User | undefined;
-  editable?: boolean; // para permitir abrir popup
-  onStatusChange?: (updatedTask: Task) => void; // callback para actualizar estado en homepage
+  editable?: boolean;
+  onStatusChange?: (updatedTask: Task) => void;
 }
 
 const TaskCard: React.FC<Props> = ({ task, user, editable = false, onStatusChange }) => {
@@ -74,22 +76,13 @@ const TaskCard: React.FC<Props> = ({ task, user, editable = false, onStatusChang
       >
         <h3>{task.titulo}</h3>
         <p>{task.descripcion}</p>
+        <p><strong>Estado:</strong> {task.estado}</p>
+        <p><strong>Prioridad:</strong> {task.prioridad || 'N/A'}</p>
+        <p><strong>Asignado a:</strong> {user ? user.nombre : 'Desconocido'}</p>
         <p>
-          <strong>Estado:</strong> {task.estado}
+          <strong>Etiqueta:</strong>{' '}
+          {task.etiqueta ? task.etiqueta.nombre : 'Ninguna'}
         </p>
-        <p>
-          <strong>Prioridad:</strong> {task.prioridad || 'N/A'}
-        </p>
-        <p>
-          <strong>Asignado a:</strong> {user ? user.nombre : 'Desconocido'}
-        </p>
-        <p>
-          <strong>Etiquetas:</strong>{' '}
-          {task.etiquetas && task.etiquetas.length > 0
-            ? task.etiquetas.map(et => et.nombre).join(', ')
-            : 'Ninguna'}
-        </p>
-
       </div>
 
       {showPopup && (

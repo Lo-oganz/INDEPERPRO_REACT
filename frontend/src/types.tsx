@@ -6,7 +6,9 @@ export type View =
   | 'profile'
   | 'newTask'
   | 'adminView'
-  | 'jefeProyectoView';
+  | 'jefeProyectoView'
+  | 'projectInfo'
+  | 'newEtiqueta';;
 
 export interface User {
   id_usuario: number;

@@ -6,6 +6,9 @@ import Homepage from './pages/HomePageView.tsx';
 import NewTaskView from './pages/NewTaskView.tsx';
 import AdminView from './pages/AdminView.tsx';
 import JefeProyectoView from './pages/JefeProyectoView.tsx';
+import ProjectInfo from './pages/ProjectInfo.tsx';
+import NewEtiquetaView from './pages/NewEtiqueta.tsx';
+
 import { View } from './types';
 
 const NavManager = () => {
@@ -23,7 +26,15 @@ const NavManager = () => {
       setUserId(Number(storedId));
       setUserRole(Number(storedRole));
       setUsername(storedName || '');
-      setView('homepage');
+
+      // Según el rol, setea vista inicial
+      if (Number(storedRole) === 3) {
+        setView('jefeProyectoView');
+      } else if (Number(storedRole) === 1) {
+        setView('adminView');
+      } else {
+        setView('homepage');
+      }
     }
   }, []);
 
@@ -32,22 +43,38 @@ const NavManager = () => {
       {view === 'welcome' && <WelcomeView setView={setView} />}
       {view === 'login' && (
         <LoginView
-          setView={(v) => setView(v)}
+          setView={setView}
           setUsername={setUsername}
           setUserId={setUserId}
           setUserRole={setUserRole}
         />
       )}
       {view === 'register' && <RegisterView setView={setView} />}
-      {view === 'homepage' && userId !== null && userRole !== null && (
+
+      {/* Usuario normal */}
+      {view === 'homepage' && userId !== null && userRole !== null && userRole !== 3 && userRole !== 1 && (
         <Homepage userId={userId} userRole={userRole} setView={setView} />
       )}
-      {view === 'newTask' && userId !== null && userRole === 3 && (
-        <NewTaskView setView={setView} userId={userId} />  // Cambiado el view y el componente
-      )}
-      {view === 'adminView' && userRole === 1 && <AdminView />}
+
+      {/* Jefe de proyecto */}
       {view === 'jefeProyectoView' && userId !== null && userRole === 3 && (
         <JefeProyectoView userId={userId} userRole={userRole} setView={setView} />
+      )}
+
+      {/* Nueva tarea (solo jefes de proyecto) */}
+      {view === 'newTask' && userId !== null && userRole === 3 && (
+        <NewTaskView setView={setView} userId={userId} userRole={userRole} />
+      )}
+
+      {/* Vista admin */}
+      {view === 'adminView' && userRole === 1 && <AdminView setView={setView} />}
+
+      {/* Vista info del proyecto */}
+      {view === 'projectInfo' && <ProjectInfo />}
+
+      {/* Nueva Etiqueta (solo jefes de proyecto) */}
+      {view === 'newEtiqueta' && userId !== null && userRole === 3 && (
+        <NewEtiquetaView setView={setView} />
       )}
     </>
   );

@@ -18,7 +18,7 @@ interface Task {
   estado: 'pendiente' | 'en progreso' | 'completada';
   prioridad: string;
   id_usuario: number;
-  etiquetas: Etiqueta[]; // ✅ AÑADIDO
+  etiqueta: Etiqueta | null;  // etiqueta única o null
 }
 
 interface User {
@@ -40,31 +40,38 @@ const Homepage: React.FC<Props> = ({ userId, userRole, setView }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedEtiqueta, setSelectedEtiqueta] = useState('');
 
-  const storedUserId = parseInt(localStorage.getItem('userId') || '0');
+  const storedUserId = userId || parseInt(localStorage.getItem('userId') || '0');
 
   useEffect(() => {
     axios.get('http://localhost:3000/api/usuarios')
-      .then(response => setUsers(response.data))
-      .catch(error => console.error('Error al obtener usuarios:', error));
+      .then(res => setUsers(res.data))
+      .catch(err => console.error('Error al obtener usuarios:', err));
 
     axios.get('http://localhost:3000/api/tareas')
-      .then(response => setTasks(response.data))
-      .catch(error => console.error('Error al obtener tareas:', error));
+      .then(res => {
+        const tareasConEtiqueta = res.data.map((t: any) => ({
+          ...t,
+          etiqueta: t.nombre_etiqueta ? { nombre: t.nombre_etiqueta } : null,
+        }));
+        setTasks(tareasConEtiqueta);
+      })
+      .catch(err => console.error('Error al obtener tareas:', err));
 
     axios.get('http://localhost:3000/api/etiquetas')
-      .then(response => setEtiquetas(response.data))
-      .catch(error => console.error('Error al obtener etiquetas:', error));
+      .then(res => setEtiquetas(res.data))
+      .catch(err => console.error('Error al obtener etiquetas:', err));
   }, []);
 
   const filtrarTareas = (t: Task) => {
-    const coincideTexto = t.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          t.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
+    const textoCoincide =
+      t.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      t.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const coincideEtiqueta =
+    const etiquetaCoincide =
       selectedEtiqueta === '' ||
-      t.etiquetas?.some(et => et.nombre.toLowerCase() === selectedEtiqueta.toLowerCase());
+      (t.etiqueta?.nombre.toLowerCase() === selectedEtiqueta.toLowerCase());
 
-    return coincideTexto && coincideEtiqueta;
+    return textoCoincide && etiquetaCoincide;
   };
 
   return (
@@ -84,13 +91,15 @@ const Homepage: React.FC<Props> = ({ userId, userRole, setView }) => {
           onChange={(e) => setSelectedEtiqueta(e.target.value)}
         >
           <option value="">Todas las etiquetas</option>
-          {etiquetas.map((et) => (
+          {etiquetas.map(et => (
             <option key={et.id_etiqueta} value={et.nombre}>{et.nombre}</option>
           ))}
         </select>
         <button
           onClick={() => {
             localStorage.removeItem('userId');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('username');
             setView('login');
           }}
           style={{ float: 'right' }}
@@ -123,20 +132,16 @@ const Homepage: React.FC<Props> = ({ userId, userRole, setView }) => {
             <div className="task-group">
               <h3>Todas las tareas</h3>
               <div className="tasks">
-                {tasks.filter(filtrarTareas).length > 0 ? (
-                  tasks.filter(filtrarTareas).map(task => {
-                    const user = users.find(u => u.id_usuario === task.id_usuario);
-                    return (
-                      <TaskCard
-                        key={task.id_tarea}
-                        task={task}
-                        user={user}
-                      />
-                    );
-                  })
-                ) : (
-                  <p>No hay tareas que coincidan.</p>
-                )}
+                {tasks.filter(filtrarTareas).map(task => {
+                  const user = users.find(u => u.id_usuario === task.id_usuario);
+                  return (
+                    <TaskCard
+                      key={task.id_tarea}
+                      task={task}
+                      user={user}
+                    />
+                  );
+                })}
               </div>
             </div>
 
@@ -155,8 +160,8 @@ const Homepage: React.FC<Props> = ({ userId, userRole, setView }) => {
                           user={user}
                           editable={true}
                           onStatusChange={(updatedTask) => {
-                            setTasks((prevTasks) =>
-                              prevTasks.map((t) => (t.id_tarea === updatedTask.id_tarea ? updatedTask : t))
+                            setTasks(prev =>
+                              prev.map(t => (t.id_tarea === updatedTask.id_tarea ? updatedTask : t))
                             );
                           }}
                         />

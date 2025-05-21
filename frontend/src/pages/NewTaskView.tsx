@@ -6,6 +6,7 @@ import './CSS/newtask.css';
 interface Props {
   setView: (view: View) => void;
   userId: number;
+  userRole: number;
 }
 
 interface Usuario {
@@ -13,13 +14,20 @@ interface Usuario {
   nombre: string;
 }
 
-const NewTaskView: React.FC<Props> = ({ setView, userId }) => {
+interface Etiqueta {
+  id_etiqueta: number;
+  nombre: string;
+}
+
+const NewTaskView: React.FC<Props> = ({ setView, userId, userRole }) => {
   const [titulo, setTitulo] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [estado, setEstado] = useState<'pendiente' | 'en progreso' | 'completada'>('pendiente');
   const [prioridad, setPrioridad] = useState<number>(2);
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [selectedUser, setSelectedUser] = useState<number>(userId);
+  const [etiquetas, setEtiquetas] = useState<Etiqueta[]>([]);
+  const [selectedEtiqueta, setSelectedEtiqueta] = useState<number | ''>('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +41,17 @@ const NewTaskView: React.FC<Props> = ({ setView, userId }) => {
       }
     };
 
+    const fetchEtiquetas = async () => {
+      try {
+        const res = await axios.get('http://localhost:3000/api/etiquetas');
+        setEtiquetas(res.data);
+      } catch (err) {
+        console.error('Error al cargar etiquetas:', err);
+      }
+    };
+
     fetchUsuarios();
+    fetchEtiquetas();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -53,6 +71,7 @@ const NewTaskView: React.FC<Props> = ({ setView, userId }) => {
         estado,
         id_usuario: selectedUser,
         id_prioridad: prioridad,
+        id_etiqueta: selectedEtiqueta === '' ? null : selectedEtiqueta,
       });
 
       setView('homepage');
@@ -132,6 +151,22 @@ const NewTaskView: React.FC<Props> = ({ setView, userId }) => {
           </select>
         </label>
 
+        <label>
+          Etiqueta
+          <select
+            value={selectedEtiqueta}
+            onChange={(e) => setSelectedEtiqueta(e.target.value === '' ? '' : Number(e.target.value))}
+            disabled={loading}
+          >
+            <option value="">-- Sin etiqueta --</option>
+            {etiquetas.map((et) => (
+              <option key={et.id_etiqueta} value={et.id_etiqueta}>
+                {et.nombre}
+              </option>
+            ))}
+          </select>
+        </label>
+
         <div className="new-task-buttons">
           <button
             type="submit"
@@ -143,7 +178,7 @@ const NewTaskView: React.FC<Props> = ({ setView, userId }) => {
 
           <button
             type="button"
-            onClick={() => setView('homepage')}
+            onClick={() => setView(userRole === 3 ? 'jefeProyectoView' : 'homepage')}
             disabled={loading}
             className="cancel-btn"
           >

@@ -5,10 +5,12 @@ exports.getAllTareas = (req, res) => {
 
   let query = `
     SELECT t.id_tarea, t.titulo, t.descripcion, t.estado, t.id_usuario,
-           p.nivel AS prioridad, u.nombre AS nombre_usuario
+           p.nivel AS prioridad, u.nombre AS nombre_usuario,
+           e.nombre AS nombre_etiqueta
     FROM tarea t
     LEFT JOIN prioridad p ON t.id_prioridad = p.id_prioridad
     LEFT JOIN usuario u ON t.id_usuario = u.id_usuario
+    LEFT JOIN etiqueta e ON t.id_etiqueta = e.id_etiqueta
   `;
 
   const params = [];
@@ -31,10 +33,12 @@ exports.getTareaById = (req, res) => {
 
   const query = `
     SELECT t.id_tarea, t.titulo, t.descripcion, t.estado, t.id_usuario,
-           p.nivel AS prioridad, u.nombre AS nombre_usuario
+           p.nivel AS prioridad, u.nombre AS nombre_usuario,
+           e.nombre AS nombre_etiqueta
     FROM tarea t
     LEFT JOIN prioridad p ON t.id_prioridad = p.id_prioridad
     LEFT JOIN usuario u ON t.id_usuario = u.id_usuario
+    LEFT JOIN etiqueta e ON t.id_etiqueta = e.id_etiqueta
     WHERE t.id_tarea = ?
   `;
 
@@ -46,11 +50,11 @@ exports.getTareaById = (req, res) => {
 };
 
 exports.createTarea = (req, res) => {
-  const { titulo, descripcion, id_prioridad, id_usuario, estado } = req.body;
+  const { titulo, descripcion, id_prioridad, id_usuario, estado, id_etiqueta } = req.body;
 
   pool.query(
-    'INSERT INTO tarea (titulo, descripcion, id_prioridad, id_usuario, estado) VALUES (?, ?, ?, ?, ?)',
-    [titulo, descripcion, id_prioridad, id_usuario, estado || 'pendiente'],
+    'INSERT INTO tarea (titulo, descripcion, id_prioridad, id_usuario, estado, id_etiqueta) VALUES (?, ?, ?, ?, ?, ?)',
+    [titulo, descripcion, id_prioridad, id_usuario, estado || 'pendiente', id_etiqueta || null],
     (error, result) => {
       if (error) return res.status(500).json({ error: 'Error al crear la tarea' });
       res.status(201).json({ id_tarea: result.insertId });
@@ -60,11 +64,11 @@ exports.createTarea = (req, res) => {
 
 exports.updateTarea = (req, res) => {
   const { id } = req.params;
-  const { titulo, descripcion, id_prioridad, id_usuario, estado } = req.body;
+  const { titulo, descripcion, id_prioridad, id_usuario, estado, id_etiqueta } = req.body;
 
   pool.query(
-    'UPDATE tarea SET titulo = ?, descripcion = ?, id_prioridad = ?, id_usuario = ?, estado = ? WHERE id_tarea = ?',
-    [titulo, descripcion, id_prioridad, id_usuario, estado, id],
+    'UPDATE tarea SET titulo = ?, descripcion = ?, id_prioridad = ?, id_usuario = ?, estado = ?, id_etiqueta = ? WHERE id_tarea = ?',
+    [titulo, descripcion, id_prioridad, id_usuario, estado, id_etiqueta || null, id],
     (error, result) => {
       if (error) return res.status(500).json({ error: 'Error al actualizar la tarea' });
       if (result.affectedRows === 0) return res.status(404).json({ error: 'Tarea no encontrada' });
@@ -88,10 +92,12 @@ exports.getByUsuario = (req, res) => {
 
   const query = `
     SELECT t.id_tarea, t.titulo, t.descripcion, t.estado, t.id_usuario,
-           p.nivel AS prioridad, u.nombre AS nombre_usuario
+           p.nivel AS prioridad, u.nombre AS nombre_usuario,
+           e.nombre AS nombre_etiqueta
     FROM tarea t
     LEFT JOIN prioridad p ON t.id_prioridad = p.id_prioridad
     LEFT JOIN usuario u ON t.id_usuario = u.id_usuario
+    LEFT JOIN etiqueta e ON t.id_etiqueta = e.id_etiqueta
     WHERE t.id_usuario = ?
     ORDER BY t.id_tarea
   `;
