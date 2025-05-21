@@ -11,36 +11,30 @@ interface LoginViewProps {
   setView: (view: View) => void;
   setUsername: (name: string) => void;
   setUserId: (id: number) => void;
+  setUserRole: (role: number) => void;
 }
 
-const LoginView: React.FC<LoginViewProps> = ({ setView, setUsername, setUserId }) => {
+const LoginView: React.FC<LoginViewProps> = ({ setView, setUsername, setUserId, setUserRole  }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState(''); 
   const [error, setError] = useState('');
+  const loginData = { email, password };
 
   const handleLogin = () => {
-    const loginData = { email, password };
-
     axios.post('http://localhost:3000/api/auth/login', loginData)
       .then(response => {
         const { id_usuario, nombre, id_rol } = response.data.usuario;
         setUserId(id_usuario);
         setUsername(nombre);
+        setUserRole(id_rol);
         localStorage.setItem('userId', id_usuario.toString());
         localStorage.setItem('userRole', id_rol.toString());
 
-        // Redirige según rol
-        if (id_rol === 1) {
-          setView('adminView');
-        } else if (id_rol === 3) {
-          setView('jefeProyectoView');
-        } else {
-          setView('homepage');
-        }
+        if (id_rol === 1) setView('adminView');
+        else if (id_rol === 3) setView('jefeProyectoView');
+        else setView('homepage');
       })
-      .catch(() => {
-        setError('Credenciales incorrectas.');
-      });
+      .catch(() => setError('Credenciales incorrectas.'));
   };
 
   return (

@@ -25,16 +25,15 @@
   font-size: 16px;
 }
 
-/* Colores por prioridad y estado */
 .task-card.alta {
-  background-color: #ffe5e5; /* rojo claro */
+  background-color: #ffe5e5; 
 }
 .task-card.media {
-  background-color: #fff8d9; /* amarillo claro */
+  background-color: #fff8d9;
 }
 .task-card.baja {
-  background-color: #e3f1ff; /* azul claro */
+  background-color: #e3f1ff; 
 }
 .task-card.completada {
-  background-color: #d2f8d2; /* verde claro */
+  background-color: #d2f8d2; 
 }

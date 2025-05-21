@@ -1,4 +1,3 @@
-// frontend/src/types.tsx
 export type View =
   | 'welcome'
   | 'login'
@@ -6,8 +5,8 @@ export type View =
   | 'homepage'
   | 'profile'
   | 'newProject'
-  | 'adminView'          // Nueva vista administrador
-  | 'jefeProyectoView';  // Nueva vista jefe proyecto
+  | 'adminView'
+  | 'jefeProyectoView';
 
 export interface User {
   id_usuario: number;

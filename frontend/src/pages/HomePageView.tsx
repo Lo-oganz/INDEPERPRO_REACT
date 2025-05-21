@@ -17,15 +17,17 @@ interface Task {
 
 interface User {
   id_usuario: number;
+  
   nombre: string;
 }
 
 interface Props {
   userId: number;
+  userRole: number;
   setView: (view: View) => void;
 }
 
-const Homepage: React.FC<Props> = ({ userId, setView }) => {
+const Homepage: React.FC<Props> = ({ userId, userRole, setView }) => {
   const [localView, setLocalView] = useState<'home' | 'profile'>('home');
   const [users, setUsers] = useState<User[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -60,6 +62,15 @@ useEffect(() => {
           <div className="icon" onClick={() => setLocalView('profile')}>
             <User size={24} />
           </div>
+          {userRole === 3 && (
+          <button
+            onClick={() => setView('newProject')}
+            className="btn-new-task"
+            style={{ marginBottom: '20px' }}
+          >
+            Nueva tarea
+          </button>
+        )}
         </div>
 
         {localView === 'home' && (

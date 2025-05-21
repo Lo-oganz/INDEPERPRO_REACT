@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const db = require('../db');
+const db = require('../config/db');
 require('dotenv').config();
 
 exports.login = async (req, res) => {
@@ -43,34 +43,3 @@ exports.login = async (req, res) => {
     res.status(500).json({ error: 'Error en el servidor' });
   }
 };
-
-
-// === Paso 2: Crea middleware jwtMiddleware.js ===
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
-
-module.exports = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (!token) {
-    return res.status(401).json({ error: 'Token no proporcionado' });
-  }
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ error: 'Token inválido' });
-    req.user = user;
-    next();
-  });
-};
-
-
-// === Paso 3: Elimina los archivos ===
-// Elimina authMiddleware.js y checkRole.js si los tienes
-
-
-// === Paso 4: Aplica jwtMiddleware en server.js ===
-// En server.js, después de app.use(express.json()):
-
-const jwtMiddleware = require('./middleware/jwtMiddleware');
-app.use(jwtMiddleware); // Protege todo
