@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const tareaController = require('../controllers/tareaController');
-const verifyToken = require('../middleware/verifyToken');
 
-router.get('/', verifyToken, tareaController.getAllTareas);
-router.get('/:id', verifyToken, tareaController.getTareaById);
-router.post('/', verifyToken, tareaController.createTarea);
-router.put('/:id', verifyToken, tareaController.updateTarea);
-router.delete('/:id', verifyToken, tareaController.deleteTarea);
-router.get('/usuario/:id_usuario', verifyToken, tareaController.getByUsuario);
+router.get('/', tareaController.getAllTareas);
+router.get('/:id', tareaController.getTareaById);
+router.post('/', tareaController.createTarea);
+router.put('/:id', tareaController.updateTarea);
+router.delete('/:id', tareaController.deleteTarea);
+router.get('/usuario/:id_usuario', tareaController.getByUsuario);
 
 module.exports = router;

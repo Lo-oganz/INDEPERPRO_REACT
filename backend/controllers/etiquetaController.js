@@ -1,30 +1,26 @@
 const pool = require('../config/db');
 
-exports.getAllEtiquetas = async (req, res) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM etiquetas');
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener etiquetas' });
-  }
+exports.getAllEtiquetas = (req, res) => {
+  pool.query('SELECT * FROM etiquetas', (error, results) => {
+    if (error) return res.status(500).json({ error: 'Error al obtener etiquetas' });
+    res.json(results);
+  });
 };
 
-exports.createEtiqueta = async (req, res) => {
+exports.createEtiqueta = (req, res) => {
   const { nombre } = req.body;
-  try {
-    const [result] = await pool.query('INSERT INTO etiquetas (nombre) VALUES (?)', [nombre]);
+
+  pool.query('INSERT INTO etiquetas (nombre) VALUES (?)', [nombre], (error, result) => {
+    if (error) return res.status(500).json({ error: 'Error al crear etiqueta' });
     res.status(201).json({ id_etiqueta: result.insertId, nombre });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al crear etiqueta' });
-  }
+  });
 };
 
-exports.deleteEtiqueta = async (req, res) => {
+exports.deleteEtiqueta = (req, res) => {
   const { id } = req.params;
-  try {
-    await pool.query('DELETE FROM etiquetas WHERE id_etiqueta = ?', [id]);
+
+  pool.query('DELETE FROM etiquetas WHERE id_etiqueta = ?', [id], (error, result) => {
+    if (error) return res.status(500).json({ error: 'Error al eliminar etiqueta' });
     res.json({ message: 'Etiqueta eliminada correctamente' });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al eliminar etiqueta' });
-  }
+  });
 };

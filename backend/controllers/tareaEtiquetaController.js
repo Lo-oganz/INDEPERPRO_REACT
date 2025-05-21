@@ -1,39 +1,33 @@
 const pool = require('../config/db');
 
-exports.agregarEtiqueta = async (req, res) => {
+exports.agregarEtiqueta = (req, res) => {
   const { id_tarea, id_etiqueta } = req.body;
 
-  try {
-    await pool.query('INSERT INTO tarea_etiqueta (id_tarea, id_etiqueta) VALUES (?, ?)', [id_tarea, id_etiqueta]);
+  pool.query('INSERT INTO tarea_etiqueta (id_tarea, id_etiqueta) VALUES (?, ?)', [id_tarea, id_etiqueta], (error, result) => {
+    if (error) return res.status(500).json({ error: 'Error al agregar la etiqueta' });
     res.status(201).json({ message: 'Etiqueta agregada a la tarea' });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al agregar la etiqueta' });
-  }
+  });
 };
 
-exports.obtenerEtiquetasDeTarea = async (req, res) => {
+exports.obtenerEtiquetasDeTarea = (req, res) => {
   const { id } = req.params;
 
-  try {
-    const [rows] = await pool.query(
-      `SELECT e.* FROM etiquetas e 
-       JOIN tarea_etiqueta te ON e.id_etiqueta = te.id_etiqueta 
-       WHERE te.id_tarea = ?`, [id]
-    );
-
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener las etiquetas' });
-  }
+  pool.query(
+    `SELECT e.* FROM etiquetas e 
+     JOIN tarea_etiqueta te ON e.id_etiqueta = te.id_etiqueta 
+     WHERE te.id_tarea = ?`, 
+    [id], 
+    (error, results) => {
+      if (error) return res.status(500).json({ error: 'Error al obtener las etiquetas' });
+      res.json(results);
+  });
 };
 
-exports.eliminarEtiquetasDeTarea = async (req, res) => {
+exports.eliminarEtiquetasDeTarea = (req, res) => {
   const { id } = req.params;
 
-  try {
-    await pool.query('DELETE FROM tarea_etiqueta WHERE id_tarea = ?', [id]);
+  pool.query('DELETE FROM tarea_etiqueta WHERE id_tarea = ?', [id], (error, result) => {
+    if (error) return res.status(500).json({ error: 'Error al eliminar las etiquetas' });
     res.json({ message: 'Etiquetas eliminadas de la tarea' });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al eliminar las etiquetas' });
-  }
+  });
 };

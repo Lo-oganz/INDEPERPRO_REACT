@@ -1,31 +1,31 @@
 const pool = require('../config/db');
 
-exports.getAllPrioridades = async (req, res) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM prioridades');
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener prioridades' });
-  }
+exports.getAllPrioridades = (req, res) => {
+  pool.query('SELECT * FROM prioridades', (error, results) => {
+    if (error) return res.status(500).json({ error: 'Error al obtener prioridades' });
+    res.json(results);
+  });
 };
 
-exports.getPrioridadById = async (req, res) => {
+exports.getPrioridadById = (req, res) => {
   const { id } = req.params;
-  try {
-    const [rows] = await pool.query('SELECT * FROM prioridades WHERE id_prioridad = ?', [id]);
-    if (rows.length === 0) return res.status(404).json({ error: 'Prioridad no encontrada' });
-    res.json(rows[0]);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener la prioridad' });
-  }
+
+  pool.query('SELECT * FROM prioridades WHERE id_prioridad = ?', [id], (error, results) => {
+    if (error) return res.status(500).json({ error: 'Error al obtener la prioridad' });
+    if (results.length === 0) return res.status(404).json({ error: 'Prioridad no encontrada' });
+    res.json(results[0]);
+  });
 };
 
-exports.createPrioridad = async (req, res) => {
+exports.createPrioridad = (req, res) => {
   const { nombre, nivel } = req.body;
-  try {
-    const [result] = await pool.query('INSERT INTO prioridades (nombre, nivel) VALUES (?, ?)', [nombre, nivel]);
-    res.status(201).json({ id_prioridad: result.insertId, nombre, nivel });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al crear la prioridad' });
-  }
+
+  pool.query(
+    'INSERT INTO prioridades (nombre, nivel) VALUES (?, ?)',
+    [nombre, nivel],
+    (error, result) => {
+      if (error) return res.status(500).json({ error: 'Error al crear la prioridad' });
+      res.status(201).json({ id_prioridad: result.insertId, nombre, nivel });
+    }
+  );
 };
