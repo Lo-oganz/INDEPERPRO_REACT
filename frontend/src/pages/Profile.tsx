@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { View } from '../types.tsx';
+import './CSS/profile.css';
 
 const UserView = ({ setView }: { setView: (view: View) => void }) => {
   const userId = parseInt(localStorage.getItem('userId') || '0');
@@ -47,7 +48,8 @@ const UserView = ({ setView }: { setView: (view: View) => void }) => {
   };
 
   return (
-    <div className="user-container">
+    <div className="user-bg">
+      <div className="user-container">
       <h2>Tu Perfil</h2>
       {error && <p className="error">{error}</p>}
 
@@ -81,6 +83,8 @@ const UserView = ({ setView }: { setView: (view: View) => void }) => {
         </>
       )}
     </div>
+    </div>
+    
   );
 };
 

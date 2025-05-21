@@ -3,8 +3,9 @@
   padding: 1rem 2rem;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 6px;
   margin-bottom: 1rem;
-  width: 100%;
+  width: 80%;
   transition: transform 0.2s ease-in-out;
+  height: 50vh;
 }
 
 .task-card:hover {
@@ -26,16 +27,16 @@
 }
 
 .task-card.alta {
-  background-color: #ffe5e5; 
+  background-color: #f2aeae; 
 }
 .task-card.media {
-  background-color: #fff8d9;
+  background-color: #fff2b7;
 }
 .task-card.baja {
-  background-color: #e3f1ff; 
+  background-color: #c3dffb; 
 }
 .task-card.completada {
-  background-color: #d2f8d2; 
+  background-color: #b9feb9; 
 }
 
 .popup-overlay {

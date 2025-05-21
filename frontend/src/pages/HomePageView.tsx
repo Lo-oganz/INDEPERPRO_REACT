@@ -77,7 +77,7 @@ const Homepage: React.FC<Props> = ({ userId, userRole, setView }) => {
   return (
     <div className="bg">
       <div className="topbar">
-        <strong>Tareas</strong>
+        <strong></strong>
         <input
           type="text"
           placeholder="Buscar tareas..."

@@ -4,7 +4,16 @@
   display: flex;
   flex-direction: column;
   color: white;
+  width: 100%;
 }
+
+.topbar, .footer {
+  max-width: 100vw;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+}
+
 
 .topbar {
   width: 100%;

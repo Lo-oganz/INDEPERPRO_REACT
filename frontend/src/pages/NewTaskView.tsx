@@ -83,111 +83,130 @@ const NewTaskView: React.FC<Props> = ({ setView, userId, userRole }) => {
     }
   };
 
-  return (
-    <div className="new-task-container">
-      <h3 className="new-task-title">Crear Nueva Tarea</h3>
-
-      <form onSubmit={handleSubmit} className="new-task-form">
-        {error && <p className="error-message">{error}</p>}
-
-        <label>
-          Título
-          <input
-            type="text"
-            value={titulo}
-            onChange={(e) => setTitulo(e.target.value)}
-            disabled={loading}
-          />
-        </label>
-
-        <label>
-          Descripción
-          <textarea
-            value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
-            disabled={loading}
-            rows={4}
-          />
-        </label>
-
-        <label>
-          Estado
-          <select
-            value={estado}
-            onChange={(e) => setEstado(e.target.value as any)}
-            disabled={loading}
-          >
-            <option value="pendiente">Pendiente</option>
-            <option value="en progreso">En progreso</option>
-            <option value="completada">Completada</option>
-          </select>
-        </label>
-
-        <label>
-          Prioridad
-          <select
-            value={prioridad}
-            onChange={(e) => setPrioridad(Number(e.target.value))}
-            disabled={loading}
-          >
-            <option value={1}>Alta</option>
-            <option value={2}>Media</option>
-            <option value={3}>Baja</option>
-          </select>
-        </label>
-
-        <label>
-          Asignar a usuario
-          <select
-            value={selectedUser}
-            onChange={(e) => setSelectedUser(Number(e.target.value))}
-            disabled={loading}
-          >
-            {usuarios.map((u) => (
-              <option key={u.id_usuario} value={u.id_usuario}>
-                {u.nombre}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label>
-          Etiqueta
-          <select
-            value={selectedEtiqueta}
-            onChange={(e) => setSelectedEtiqueta(e.target.value === '' ? '' : Number(e.target.value))}
-            disabled={loading}
-          >
-            <option value="">-- Sin etiqueta --</option>
-            {etiquetas.map((et) => (
-              <option key={et.id_etiqueta} value={et.id_etiqueta}>
-                {et.nombre}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <div className="new-task-buttons">
-          <button
-            type="submit"
-            disabled={loading}
-            className="create-btn"
-          >
-            {loading ? 'Creando...' : 'Crear'}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setView(userRole === 3 ? 'jefeProyectoView' : 'homepage')}
-            disabled={loading}
-            className="cancel-btn"
-          >
-            Cancelar
-          </button>
-        </div>
-      </form>
+return (
+  <div className="bg">
+    <div className="topbar">
+      <button
+        onClick={() => {
+          localStorage.clear();
+          setView('login');
+        }}
+        style={{ float: 'right' }}
+      >
+        Cerrar sesión
+      </button>
     </div>
-  );
+
+    <div className="content">
+      <div className="new-task-container">
+        <h3 className="new-task-title">Crear Nueva Tarea</h3>
+
+        <form onSubmit={handleSubmit} className="new-task-form">
+          {error && <p className="error-message">{error}</p>}
+
+          <label>
+            Título
+            <input
+              type="text"
+              value={titulo}
+              onChange={(e) => setTitulo(e.target.value)}
+              disabled={loading}
+            />
+          </label>
+
+          <label>
+            Descripción
+            <textarea
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+              disabled={loading}
+              rows={4}
+            />
+          </label>
+
+          <label>
+            Estado
+            <select
+              value={estado}
+              onChange={(e) => setEstado(e.target.value as any)}
+              disabled={loading}
+            >
+              <option value="pendiente">Pendiente</option>
+              <option value="en progreso">En progreso</option>
+              <option value="completada">Completada</option>
+            </select>
+          </label>
+
+          <label>
+            Prioridad
+            <select
+              value={prioridad}
+              onChange={(e) => setPrioridad(Number(e.target.value))}
+              disabled={loading}
+            >
+              <option value={1}>Alta</option>
+              <option value={2}>Media</option>
+              <option value={3}>Baja</option>
+            </select>
+          </label>
+
+          <label>
+            Asignar a usuario
+            <select
+              value={selectedUser}
+              onChange={(e) => setSelectedUser(Number(e.target.value))}
+              disabled={loading}
+            >
+              {usuarios.map((u) => (
+                <option key={u.id_usuario} value={u.id_usuario}>
+                  {u.nombre}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label>
+            Etiqueta
+            <select
+              value={selectedEtiqueta}
+              onChange={(e) =>
+                setSelectedEtiqueta(e.target.value === '' ? '' : Number(e.target.value))
+              }
+              disabled={loading}
+            >
+              <option value="">-- Sin etiqueta --</option>
+              {etiquetas.map((et) => (
+                <option key={et.id_etiqueta} value={et.id_etiqueta}>
+                  {et.nombre}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <div className="new-task-buttons">
+            <button
+              type="submit"
+              disabled={loading}
+              className="create-btn"
+            >
+              {loading ? 'Creando...' : 'Crear'}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setView(userRole === 3 ? 'jefeProyectoView' : 'homepage')}
+              disabled={loading}
+              className="cancel-btn"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+);
+
 };
 
 export default NewTaskView;
