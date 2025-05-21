@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 
-// Rutas
 const etiquetaRoutes = require('./routes/etiquetaRoutes');
 const prioridadRoutes = require('./routes/prioridadRoutes');
 const rolRoutes = require('./routes/rolRoutes');

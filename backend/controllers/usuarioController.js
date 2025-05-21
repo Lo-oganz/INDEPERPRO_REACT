@@ -1,41 +1,60 @@
-const Usuario = require('../models/Usuario');
+const pool = require('../config/db');
 const bcrypt = require('bcrypt');
 
 exports.getAllUsuarios = (req, res) => {
-  Usuario.getAll((err, results) => {
-    if (err) return res.status(500).json({ error: err });
+  pool.query('SELECT * FROM usuario', (error, results) => {
+    if (error) return res.status(500).json({ error: 'Error al obtener los usuarios' });
     res.json(results);
   });
 };
 
 exports.getUsuarioById = (req, res) => {
   const id = req.params.id;
-  Usuario.getById(id, (err, result) => {
-    if (err) return res.status(500).json({ error: err });
-    if (!result.length) return res.status(404).json({ error: 'Usuario no encontrado' });
-    res.json(result[0]);
+  pool.query('SELECT * FROM usuario WHERE id_usuario = ?', [id], (error, results) => {
+    if (error) return res.status(500).json({ error: 'Error al obtener el usuario' });
+    if (!results.length) return res.status(404).json({ error: 'Usuario no encontrado' });
+    res.json(results[0]);
   });
 };
 
 exports.createUsuario = (req, res) => {
-  Usuario.create(req.body, (err, result) => {
-    if (err) return res.status(500).json({ error: err });
-    res.status(201).json({ message: 'Usuario creado', id: result.insertId });
+  const { nombre, email, password, id_rol } = req.body;
+  const saltRounds = 10;
+
+  bcrypt.hash(password, saltRounds, (err, hash) => {
+    if (err) return res.status(500).json({ error: 'Error al encriptar la contraseña' });
+
+    pool.query(
+      'INSERT INTO usuario (nombre, email, password, id_rol) VALUES (?, ?, ?, ?)',
+      [nombre, email, hash, id_rol],
+      (error, result) => {
+        if (error) return res.status(500).json({ error: 'Error al crear el usuario' });
+        res.status(201).json({ message: 'Usuario creado', id: result.insertId });
+      }
+    );
   });
 };
 
 exports.updateUsuario = (req, res) => {
   const id = req.params.id;
-  Usuario.update(id, req.body, (err) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json({ message: 'Usuario actualizado' });
-  });
+  const { nombre, email, id_rol } = req.body;
+
+  pool.query(
+    'UPDATE usuario SET nombre = ?, email = ?, id_rol = ? WHERE id_usuario = ?',
+    [nombre, email, id_rol, id],
+    (error, result) => {
+      if (error) return res.status(500).json({ error: 'Error al actualizar el usuario' });
+      if (result.affectedRows === 0) return res.status(404).json({ error: 'Usuario no encontrado' });
+      res.json({ message: 'Usuario actualizado' });
+    }
+  );
 };
 
 exports.deleteUsuario = (req, res) => {
   const id = req.params.id;
-  Usuario.delete(id, (err) => {
-    if (err) return res.status(500).json({ error: err });
+  pool.query('DELETE FROM usuario WHERE id_usuario = ?', [id], (error, result) => {
+    if (error) return res.status(500).json({ error: 'Error al eliminar el usuario' });
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Usuario no encontrado' });
     res.json({ message: 'Usuario eliminado' });
   });
 };
@@ -43,9 +62,11 @@ exports.deleteUsuario = (req, res) => {
 exports.loginUsuario = (req, res) => {
   const { email, password } = req.body;
 
-  Usuario.findByEmail(email, (err, user) => {
-    if (err) return res.status(500).json({ error: 'Error interno' });
-    if (!user) return res.status(401).json({ error: 'Credenciales incorrectas' });
+  pool.query('SELECT * FROM usuario WHERE email = ?', [email], (error, results) => {
+    if (error) return res.status(500).json({ error: 'Error interno' });
+    if (!results.length) return res.status(401).json({ error: 'Credenciales incorrectas' });
+
+    const user = results[0];
 
     bcrypt.compare(password, user.password, (err, isMatch) => {
       if (err) return res.status(500).json({ error: 'Error interno' });
@@ -71,8 +92,13 @@ exports.assignRole = (req, res) => {
     return res.status(400).json({ error: 'Faltan campos obligatorios' });
   }
 
-  Usuario.assignRole(id_usuario, id_rol, (err, result) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json({ message: 'Rol asignado correctamente' });
-  });
+  pool.query(
+    'UPDATE usuario SET id_rol = ? WHERE id_usuario = ?',
+    [id_rol, id_usuario],
+    (error, result) => {
+      if (error) return res.status(500).json({ error: 'Error al asignar el rol' });
+      if (result.affectedRows === 0) return res.status(404).json({ error: 'Usuario no encontrado' });
+      res.json({ message: 'Rol asignado correctamente' });
+    }
+  );
 };

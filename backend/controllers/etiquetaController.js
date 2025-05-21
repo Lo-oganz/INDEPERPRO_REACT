@@ -1,7 +1,7 @@
 const pool = require('../config/db');
 
 exports.getAllEtiquetas = (req, res) => {
-  pool.query('SELECT * FROM etiquetas', (error, results) => {
+  pool.query('SELECT * FROM etiqueta', (error, results) => {
     if (error) return res.status(500).json({ error: 'Error al obtener etiquetas' });
     res.json(results);
   });
@@ -10,7 +10,7 @@ exports.getAllEtiquetas = (req, res) => {
 exports.createEtiqueta = (req, res) => {
   const { nombre } = req.body;
 
-  pool.query('INSERT INTO etiquetas (nombre) VALUES (?)', [nombre], (error, result) => {
+  pool.query('INSERT INTO etiqueta (nombre) VALUES (?)', [nombre], (error, result) => {
     if (error) return res.status(500).json({ error: 'Error al crear etiqueta' });
     res.status(201).json({ id_etiqueta: result.insertId, nombre });
   });
@@ -19,7 +19,7 @@ exports.createEtiqueta = (req, res) => {
 exports.deleteEtiqueta = (req, res) => {
   const { id } = req.params;
 
-  pool.query('DELETE FROM etiquetas WHERE id_etiqueta = ?', [id], (error, result) => {
+  pool.query('DELETE FROM etiqueta WHERE id_etiqueta = ?', [id], (error, result) => {
     if (error) return res.status(500).json({ error: 'Error al eliminar etiqueta' });
     res.json({ message: 'Etiqueta eliminada correctamente' });
   });
