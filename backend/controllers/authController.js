@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const db = require('../config/db');
+//Este controlador es para la correcta autenticación con la librería de bcrypt.
 
 exports.login = (req, res) => {
   const { email, password } = req.body;
@@ -26,7 +27,6 @@ exports.login = (req, res) => {
         return res.status(401).json({ error: 'Contraseña incorrecta' });
       }
 
-      // ✅ Éxito - Devolver los datos del usuario (sin token)
       res.json({
         message: 'Login exitoso',
         usuario: {

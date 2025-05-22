@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+//Controlador de prioridad, contiene sus funciones 
 
 exports.getAllPrioridades = (req, res) => {
   pool.query('SELECT * FROM prioridad', (error, results) => {

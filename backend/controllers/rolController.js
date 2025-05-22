@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+//Controlador de rol que tiene sus pocas funciones de datos creadas
 
 exports.getAllRoles = (req, res) => {
   pool.query('SELECT * FROM rol', (error, results) => {

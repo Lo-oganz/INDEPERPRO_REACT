@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
-
-const passwords = ['123456', '123456']; // para ambos usuarios, puedes cambiar
+// Esto es un ejemplo de como hashear una contraseña para realizar 2 cuentas nuevas. 
+const passwords = ['123456', '123456']; 
 
 passwords.forEach(async (pass, i) => {
   const hash = await bcrypt.hash(pass, 10);

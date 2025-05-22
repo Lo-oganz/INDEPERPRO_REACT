@@ -8,7 +8,7 @@ export type View =
   | 'adminView'
   | 'jefeProyectoView'
   | 'projectInfo'
-  | 'newEtiqueta';;
+  | 'newEtiqueta';
 
 export interface User {
   id_usuario: number;
@@ -16,7 +16,8 @@ export interface User {
   email: string;
   id_rol?: number;  
 }
-
+//Aquí exportamos los tipos y demás para poder llamarlos a los views de forma foránea. 
+//Es más fácil llamar a este fichero con todos los views que llamarlos en cada fichero uno por uno.
 export type EstadoTarea = 'pendiente' | 'en progreso' | 'completada';
 
 export interface Etiqueta {

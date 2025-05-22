@@ -1,5 +1,5 @@
 import React from 'react';
-
+//Este es el componente del footer
 const Footer: React.FC = () => (
   <footer className="footer">
     <h3>Contacto</h3>

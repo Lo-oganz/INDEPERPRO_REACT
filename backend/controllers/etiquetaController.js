@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+//Este controlador es de la tabla etiqueta
 
 exports.getAllEtiquetas = (req, res) => {
   pool.query('SELECT * FROM etiqueta', (error, results) => {

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './CSS/projectinfo.css';
 
+//Aquí se muestra la info actual del proyecto actual.
+
 const ProjectInfo: React.FC = () => {
   const [editing, setEditing] = useState(false);
   const [titulo, setTitulo] = useState('Proyecto de Ejemplo');

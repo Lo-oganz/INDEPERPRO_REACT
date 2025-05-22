@@ -7,6 +7,8 @@ import { View } from '../types';
 import axios from 'axios';
 import './CSS/login.css';
 
+//Aquí se inicia sesión correctamente
+
 interface LoginViewProps {
   setView: (view: View) => void;
   setUsername: (name: string) => void;

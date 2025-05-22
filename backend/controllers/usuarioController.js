@@ -1,5 +1,6 @@
 const pool = require('../config/db');
 const bcrypt = require('bcrypt');
+//Controlador de usuario que tiene todas sus funciones declaradas
 
 exports.getAllUsuarios = (req, res) => {
   pool.query('SELECT * FROM usuario', (error, results) => {

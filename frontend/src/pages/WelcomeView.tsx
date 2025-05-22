@@ -5,7 +5,7 @@ import { FaClipboardList, FaRocket, FaComments } from 'react-icons/fa';
 interface Props {
   setView: (view: 'login' | 'register') => void;
 }
-
+//Este es el view q recibirá al usuario si no ha iniciado nadie sesión antes.
 const WelcomeView: React.FC<Props> = ({ setView }) => {
   return (
     <div className="welcome-bg">
@@ -16,7 +16,7 @@ const WelcomeView: React.FC<Props> = ({ setView }) => {
       <div className="welcome-content">
         <h1 className="main-title">Convierte el caos en productividad</h1>
          <p className="subtitle">
-          Gestiona proyectos sin complicaciones. Planifica, trabaja y colabora mejor.
+          Gestiona tareas sin complicaciones. Planifica, trabaja y colabora mejor.
         </p>
 
         <div className="features">
@@ -25,7 +25,7 @@ const WelcomeView: React.FC<Props> = ({ setView }) => {
             <h2>Organizar</h2>
             <hr />
             <p>
-              Con la gestión de proyectos, tareas y asignaciones, cada miembro sabe exactamente qué debe hacer y cuáles son los plazos.
+              Con la gestión de tareas, el etiquetado y las prioridades, cada miembro sabe exactamente qué debe hacer.
               Además, los filtros y estados de tareas ayudan a visualizar el progreso del equipo en todo momento.
             </p>
           </div>
@@ -36,7 +36,7 @@ const WelcomeView: React.FC<Props> = ({ setView }) => {
             <hr />
             <p>
               La herramienta está diseñada para optimizar el flujo de trabajo y aumentar la productividad. 
-              Al definir claramente las tareas y responsables, los desarrolladores pueden concentrarse en avanzar en sus proyectos sin distracciones ni confusión.
+              Al definir claramente las tareas y responsables, los desarrolladores pueden concentrarse en avanzar en el proyecto sin distracciones ni confusión.
             </p>
           </div>
 
@@ -46,18 +46,17 @@ const WelcomeView: React.FC<Props> = ({ setView }) => {
             <hr />
             <p>
               El éxito de un equipo depende de una buena comunicación. 
-              La aplicación permite que los miembros colaboren dentro de cada tarea, dejando comentarios, adjuntando archivos 
-              y manteniendo un historial de cambios para evitar malentendidos.
+              La aplicación permite que se adjudiquen etiquetas para poder comunicar de qué tipo trata susodicha tarea.
             </p>
           </div>
         </div>
       </div>
 
-      <footer className="footer">
-        <h3>Contacto</h3>
-        <p>Correo: contacto@appfalsa.com</p>
-        <p>Teléfono: +34 600 000 000</p>
-      </footer>
+        <footer className="footer">
+          <h3>Contacto</h3>
+          <p>Correo: robigarcia@gmail.com</p>
+          <p>Teléfono: +34 717 710 900</p>
+        </footer>
     </div>
   );
 };

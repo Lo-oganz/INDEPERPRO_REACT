@@ -1,4 +1,5 @@
 const db = require('../config/db');
+//Modelo de rol
 
 const Rol = {
   getAll: (callback) => {

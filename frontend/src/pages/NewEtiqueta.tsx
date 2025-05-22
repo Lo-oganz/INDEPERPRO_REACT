@@ -3,6 +3,8 @@ import axios from 'axios';
 import type { View } from '../types';
 import './CSS/newtask.css';
 
+//Este view es parecido al newtaskview, en el que deja crear una nueva etiqueta.
+
 interface Props {
   setView: (view: View) => void;
 }

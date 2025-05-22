@@ -7,7 +7,7 @@ const rolRoutes = require('./routes/rolRoutes');
 const tareaRoutes = require('./routes/tareaRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes');
 const authRoutes = require('./routes/authRoutes');
-
+// En este fichero se usa la app de express para definir todos los endpoints y el puerto donde escucha la app del backend.
 const app = express();
 const PORT = 3000;
 

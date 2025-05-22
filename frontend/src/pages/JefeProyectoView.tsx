@@ -6,6 +6,8 @@ import ProjectInfo from './ProjectInfo.tsx';
 import { Home, User, Edit3, Plus } from 'lucide-react';
 import { View } from '../types.tsx';
 import './CSS/jefeproyecto.css';
+//Este view también es importante, ya que es el que solo puede ver el JEFE de proyecto, una cuenta dada por el administrador en persona al trabajador elegido.
+//Muestra las tareas totales, deja crear nuevas tareas y nuevas etiquetas y deja modificar los datos del proyecto actual.
 
 interface Etiqueta {
   id_etiqueta: number;
@@ -45,9 +47,17 @@ const JefeProyectoView: React.FC<Props> = ({ userId, userRole, setView }) => {
       .catch(err => console.error('Error al obtener usuarios:', err));
 
     axios.get('http://localhost:3000/api/tareas')
-      .then(res => setTasks(res.data))
-      .catch(err => console.error('Error al obtener tareas:', err));
+  .then(res => {
+    const tareasConEtiqueta = res.data.map((t: any) => ({
+      ...t,
+      etiqueta: t.nombre_etiqueta ? { nombre: t.nombre_etiqueta } : null,
+    }));
+    setTasks(tareasConEtiqueta);
+  })
+  .catch(err => console.error('Error al obtener tareas:', err));
   }, []);
+
+  
 
   return (
     <div className="bg">

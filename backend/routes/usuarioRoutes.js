@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const usuarioController = require('../controllers/usuarioController');
+//Estas son las rutas de endpoints de usuario.
 
 router.get('/', usuarioController.getAllUsuarios);
 router.post('/', usuarioController.createUsuario);

@@ -3,6 +3,8 @@ import axios from 'axios';
 import { View } from '../types.tsx';
 import './CSS/profile.css';
 
+//Aquí se muestra el perfil del usuario actual.
+
 const UserView = ({ setView }: { setView: (view: View) => void }) => {
   const userId = parseInt(localStorage.getItem('userId') || '0');
   const [nombre, setNombre] = useState('');

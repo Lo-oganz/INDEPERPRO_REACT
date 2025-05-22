@@ -1,6 +1,6 @@
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
-
+//Modelo de usuario
 const Usuario = {
   getAll: (callback) => {
     db.query('SELECT * FROM usuario', callback);
@@ -12,7 +12,7 @@ const Usuario = {
 
   create: (data, callback) => {
     const { nombre, email, password } = data;
-    const id_rol = 2;  // fijo
+    const id_rol = 2; 
 
     bcrypt.hash(password, 10, (err, hash) => {
       if (err) return callback(err);

@@ -5,6 +5,8 @@ import { View } from '../types';
 import TopbarAuth from '../components/TopbarAuth.tsx'; 
 import Footer from '../components/Footer.tsx';
 
+//Aquí se crea una cuenta y luego se lleva a la página de inicio de sesión.
+
 interface RegisterViewProps {
   setView: (view: View) => void;
 }

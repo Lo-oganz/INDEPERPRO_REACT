@@ -5,6 +5,7 @@ interface TopbarProps {
   setView: (view: View) => void;
 }
 
+//Para la barra superior de navegación
 const Topbar: React.FC<TopbarProps> = ({ setView }) => (
   <div className="topbar">
     <button onClick={() => setView('login')}>Iniciar sesión</button>

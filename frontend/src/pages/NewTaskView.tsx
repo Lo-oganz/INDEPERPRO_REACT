@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import type { View } from '../types';
 import './CSS/newtask.css';
+//Este view es parecido al newetiqueta, en el que deja crear una nueva tarea.
 
 interface Props {
   setView: (view: View) => void;
@@ -55,33 +56,34 @@ const NewTaskView: React.FC<Props> = ({ setView, userId, userRole }) => {
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
+  e.preventDefault();
+  setError('');
 
-    if (!titulo.trim()) {
-      setError('El título es obligatorio');
-      return;
-    }
+  if (!titulo.trim()) {
+    setError('El título es obligatorio');
+    return;
+  }
 
-    setLoading(true);
-    try {
-      await axios.post('http://localhost:3000/api/tareas', {
-        titulo,
-        descripcion,
-        estado,
-        id_usuario: selectedUser,
-        id_prioridad: prioridad,
-        id_etiqueta: selectedEtiqueta === '' ? null : selectedEtiqueta,
-      });
+  setLoading(true);
+  try {
+    await axios.post('http://localhost:3000/api/tareas', {
+      titulo,
+      descripcion,
+      estado,
+      id_usuario: selectedUser,
+      id_prioridad: prioridad,
+      id_etiqueta: selectedEtiqueta === '' ? null : selectedEtiqueta,
+    });
 
-      setView('homepage');
-    } catch (err) {
-      console.error('Error creando la tarea:', err);
-      setError('Error al crear la tarea');
-    } finally {
-      setLoading(false);
-    }
-  };
+    setView(userRole === 3 ? 'jefeProyectoView' : 'homepage');
+  } catch (err) {
+    console.error('Error creando la tarea:', err);
+    setError('Error al crear la tarea');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
 return (
   <div className="bg">

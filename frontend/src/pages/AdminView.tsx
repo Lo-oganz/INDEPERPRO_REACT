@@ -1,11 +1,10 @@
-// src/views/AdminView.tsx
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TaskCard from '../components/TaskCard.tsx';
-import './CSS/homepage.css';
-import { Home, User } from 'lucide-react';
+import './CSS/admincss.css'; 
 import { View } from '../types.tsx';
+
+//View que muestra usuarios para eliminar, las tareas existentes y todas las etiquetas. Todos para eliminar
 
 interface User {
   id_usuario: number;
@@ -35,7 +34,6 @@ const AdminView: React.FC<Props> = ({ setView }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [etiquetas, setEtiquetas] = useState<Etiqueta[]>([]);
-  const [localView, setLocalView] = useState<'home' | 'profile'>('home');
 
   useEffect(() => {
     axios.get('http://localhost:3000/api/usuarios')
@@ -70,65 +68,62 @@ const AdminView: React.FC<Props> = ({ setView }) => {
   };
 
   return (
-    <div className="bg">
-      {/* Topbar igual que en Homepage */}
+    <div className="admin-bg">
       <div className="topbar">
         <button
           onClick={() => {
-            localStorage.removeItem('userId');
-            localStorage.removeItem('userRole');
-            localStorage.removeItem('username');
+            localStorage.clear();
             setView('login');
           }}
-          style={{ float: 'right' }}
         >
           Cerrar sesión
         </button>
       </div>
 
+      <div className="admin-content">
+        <section className="admin-section">
+          <h2 className="section-title">Usuarios</h2>
+          <div className="admin-cards">
+            {users.map(user => (
+              <div key={user.id_usuario} className="admin-card">
+                <span>{user.nombre}</span>
+                <button onClick={() => eliminarUsuario(user.id_usuario)}>Eliminar</button>
+              </div>
+            ))}
+          </div>
+        </section>
 
-      <div className="content" style={{ marginLeft: '10vh', paddingTop: '10vh' }}>
-        {localView === 'home' && (
-          <>
-            <h2>Gestión de Usuarios</h2>
-            <div className="tasks">
-              {users.map(user => (
-                <div key={user.id_usuario} className="task-card">
-                  <h4>{user.nombre}</h4>
-                  <button onClick={() => eliminarUsuario(user.id_usuario)}>Eliminar</button>
+        <section className="admin-section">
+          <h2 className="section-title">Tareas</h2>
+          <div className="admin-cards tareas-scroll">
+            {tasks.map(task => {
+              const user = users.find(u => u.id_usuario === task.id_usuario);
+              return (
+                <div key={task.id_tarea} className="task-wrapper">
+                  <TaskCard task={task} user={user} />
+                  <button
+                    className="delete-task"
+                    onClick={() => eliminarTarea(task.id_tarea)}
+                  >
+                    Eliminar
+                  </button>
                 </div>
-              ))}
-            </div>
+              );
+            })}
+          </div>
+        </section>
 
-            <h2>Gestión de Tareas</h2>
-            <div className="tasks">
-              {tasks.map(task => {
-                const user = users.find(u => u.id_usuario === task.id_usuario);
-                return (
-                  <div key={task.id_tarea} style={{ position: 'relative' }}>
-                    <TaskCard task={task} user={user} />
-                    <button
-                      style={{ position: 'absolute', top: '10px', right: '10px' }}
-                      onClick={() => eliminarTarea(task.id_tarea)}
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-
-            <h2>Gestión de Etiquetas</h2>
-            <div className="tasks">
-              {etiquetas.map(et => (
-                <div key={et.id_etiqueta} className="task-card">
-                  <h4>{et.nombre}</h4>
-                  <button onClick={() => eliminarEtiqueta(et.id_etiqueta)}>Eliminar</button>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
+        <section className="admin-section">
+          <h2 className="section-title">Etiquetas</h2>
+          <div className="admin-cards">
+            {etiquetas.map(et => (
+              <div key={et.id_etiqueta} className="admin-card">
+                <span>{et.nombre}</span>
+                <button onClick={() => eliminarEtiqueta(et.id_etiqueta)}>Eliminar</button>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );

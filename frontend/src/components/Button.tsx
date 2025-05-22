@@ -1,4 +1,5 @@
 import React from 'react';
+//componente para un botón
 
 interface ButtonProps {
   onClick: () => void;

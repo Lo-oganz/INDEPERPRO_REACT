@@ -1,9 +1,7 @@
-// TaskCard.tsx (modificado)
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import './TaskCard.css';
-
+//MUY IMPORTANTE COMPONENTE, se usa para mostrar casi todos los registros. 
 interface Etiqueta {
   id_etiqueta: number;
   nombre: string;
@@ -16,7 +14,7 @@ interface Task {
   estado: 'pendiente' | 'en progreso' | 'completada';
   prioridad: string;
   id_usuario: number;
-  etiqueta: Etiqueta | null; // SOLO UNA etiqueta, puede ser null si no tiene etiqueta
+  etiqueta: Etiqueta | null;
 }
 
 interface User {

@@ -6,6 +6,8 @@ import UserView from './Profile.tsx';
 import { Home, User } from 'lucide-react';
 import { View } from '../types.tsx';
 
+//Este view importante es el que solo puede ver el usuario de rol usuario. Muestra sus tareas y las tareas totales.
+
 interface Etiqueta {
   id_etiqueta: number;
   nombre: string;
@@ -18,7 +20,7 @@ interface Task {
   estado: 'pendiente' | 'en progreso' | 'completada';
   prioridad: string;
   id_usuario: number;
-  etiqueta: Etiqueta | null;  // etiqueta única o null
+  etiqueta: Etiqueta | null;
 }
 
 interface User {

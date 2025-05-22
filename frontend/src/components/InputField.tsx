@@ -1,5 +1,5 @@
 import React from 'react';
-
+//Este componente es el que guarda los input
 interface InputFieldProps {
   type: string;
   placeholder: string;

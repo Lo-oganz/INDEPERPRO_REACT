@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+//Este es el controlador de tarea, que tiene todas sus funciones declaradas con sus left joins
 
 exports.getAllTareas = (req, res) => {
   const { id_usuario } = req.query;

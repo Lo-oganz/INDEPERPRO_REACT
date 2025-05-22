@@ -6,7 +6,7 @@ import '../pages/CSS/topbar.css';
 interface TopbarAuthProps {
   setView: (view: View) => void;
 }
-
+//Para la barra superior de navegación en la autenticación.
 const TopbarAuth: React.FC<TopbarAuthProps> = ({ setView }) => {
   return (
     <div className="topbar">
